@@ -6,7 +6,7 @@ import ButtonText from '../../components/ButtonText';
 import CommonButton from '../../components/CommonButton';
 import Product from '../../components/Product';
 import { Section } from '../../components/styledComponents';
-import { STRAPI_URL } from '../../globalVariables';
+import { HEADERS, STRAPI_URL } from '../../globalVariables';
 import { HomeContent } from '../../types/home_api_responses';
 import { Product as Product_T } from '../../types/products_api_response';
 import { Room as Room_T } from '../../types/rooms_api_response';
@@ -41,11 +41,12 @@ const Hero = styled.section<BgProps>`
 `;
 
 const Home = ({ content, products, rooms, stores }: Props) => {
+
    return (
       <>
          <Layout inHome>
             <Hero bgHref={STRAPI_URL + content.background.data.attributes.url}>
-               <h1 tw="text-center text-titles text-7xl">{content.title}</h1>
+               <h1 tw="text-center text-titles text-6xl">{content.title}</h1>
                <Link href="/shop">
                   <a>
                      <CommonButton type="inverse">SHOP NOW</CommonButton>
@@ -73,7 +74,11 @@ const Home = ({ content, products, rooms, stores }: Props) => {
                            </p>
                         );
                      })}
-                     <CommonButton type="default">SHOP NOW</CommonButton>
+                     <Link href="/shop">
+                        <a>
+                           <CommonButton type="default">SHOP NOW</CommonButton>
+                        </a>
+                     </Link>
                   </div>
                </div>
             </Section>
@@ -85,11 +90,11 @@ const Home = ({ content, products, rooms, stores }: Props) => {
             <Section className="rooms">
                <h2 tw="text-5xl text-center">Rooms</h2>
                <Link href="rooms">
-                  <a tw="flex justify-center mt-6">
+                  <a tw="flex justify-center my-6">
                      <ButtonText arrowPos="after">SEE ALL</ButtonText>
                   </a>
                </Link>
-               <div tw="grid grid-cols-2 gap-8">
+               <div tw="grid grid-cols-1 gap-8 mx-auto max-w-[200px]">
                   {rooms.map((room, i) => {
                      return i < 3 ? <Room key={room.id} room={room} /> : null;
                   })}
@@ -107,16 +112,16 @@ const Home = ({ content, products, rooms, stores }: Props) => {
 };
 
 export const getStaticProps: GetStaticProps = async ctx => {
-   const homeRes = await fetch(STRAPI_URL + '/api/home?populate=*');
+   const homeRes = await fetch(process.env.STRAPI_URL + '/api/home?populate=*', HEADERS);
    const homeData = await homeRes.json();
 
-   const productsRes = await fetch(STRAPI_URL + '/api/products?populate=*');
+   const productsRes = await fetch(process.env.STRAPI_URL + '/api/products?populate=*', HEADERS);
    const productsData = await productsRes.json();
 
-   const roomsRes = await fetch(STRAPI_URL + '/api/rooms?populate=*');
+   const roomsRes = await fetch(process.env.STRAPI_URL + '/api/rooms?populate=*', HEADERS);
    const roomsData = await roomsRes.json();
 
-   const storesRes = await fetch(STRAPI_URL + '/api/stores?populate=*');
+   const storesRes = await fetch(process.env.STRAPI_URL + '/api/stores?populate=*', HEADERS);
    const storesData = await storesRes.json();
 
    return {

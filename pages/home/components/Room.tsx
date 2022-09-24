@@ -31,7 +31,7 @@ const Circle = styled.div<CircleProps>`
 
    h3 {
       ${tw`
-         text-center text-titles text-5xl
+         text-center text-titles text-4xl
          px-0
       `}
    }

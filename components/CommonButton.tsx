@@ -11,7 +11,13 @@ interface ButtonProps {
 }
 
 const Button_S = styled.button<ButtonProps>`
-   ${tw`px-8 py-4 rounded-full border`}
+   ${tw`
+      border
+      px-8 py-4
+      rounded-full 
+      whitespace-nowrap
+   `}
+
    ${({ colorScheme }) => {
       switch (colorScheme) {
          case 'default':

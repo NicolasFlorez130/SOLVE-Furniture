@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 import { STRAPI_URL } from '../globalVariables';
 import { Product as Product_T } from '../types/products_api_response';
+import { UsdFormatter } from '../utils/formatters';
 
 interface Props {
    product: Product_T;
@@ -27,10 +28,8 @@ const ImageContainer = styled.div`
 `;
 
 const Product = ({ product }: Props) => {
-   const usdFormatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
    return (
-      <Link href={'/' + product.attributes.name.toLocaleLowerCase()}>
+      <Link href={'/shop/' + product.attributes.name.toLocaleLowerCase()}>
          <div tw="cursor-pointer w-full">
             <ImageContainer className="aspect-[2/3]">
                <Image
@@ -38,11 +37,12 @@ const Product = ({ product }: Props) => {
                   src={STRAPI_URL + product.attributes.image.data.attributes.url}
                   layout="fill"
                   tw="object-contain"
+                  priority
                />
             </ImageContainer>
             <h5 tw="text-xl font-medium text-center pt-4">{product.attributes.name}</h5>
             <p tw="text-base font-medium text-center">
-               {usdFormatter.format(product.attributes.price)} USD
+               {UsdFormatter.format(product.attributes.price)} USD
             </p>
          </div>
       </Link>

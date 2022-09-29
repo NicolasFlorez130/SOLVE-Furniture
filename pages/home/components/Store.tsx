@@ -1,7 +1,6 @@
 import { Store as Store_T } from '../../../types/stores_api_response';
 import Image from 'next/image';
 import tw from 'twin.macro';
-import { STRAPI_URL } from '../../../globalVariables';
 import styled from 'styled-components';
 import ButtonText from '../../../components/ButtonText';
 
@@ -45,7 +44,7 @@ const Store = ({ store }: Props) => {
          <div className="imageContainer">
             <Image
                alt={store.attributes.city + ' store'}
-               src={STRAPI_URL + store.attributes.media.data.attributes.url}
+               src={process.env.NEXT_PUBLIC_API + store.attributes.media.data.attributes.url}
                layout="fill"
                tw="object-cover"
             />

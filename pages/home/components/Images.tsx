@@ -1,8 +1,10 @@
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
 import Image from 'next/image';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import { BgProps } from '..';
-import { STRAPI_URL } from '../../../globalVariables';
 import { Bubble_Data } from '../../../types/home_api_responses';
 
 interface Props {
@@ -13,11 +15,11 @@ interface Props {
 
 const Images_S = styled.section<BgProps>`
    ${tw`
-      bg-cover bg-center
+      bg-blend-multiply bg-cover bg-center bg-texts bg-opacity-10
       relative
    `}
 
-   .imageContainer {
+   .bubble {
       ${tw`
          absolute top-0
          overflow-hidden 
@@ -40,17 +42,48 @@ const Title = tw.h2`
    z-10
 `;
 
+gsap.registerPlugin(ScrollTrigger);
+
 const Images = ({ children, bgHref, bubbles }: Props) => {
+   useEffect(() => {
+      const movement = gsap.fromTo(
+         '.bubble',
+         {
+            scale: 0.5,
+            xPercent: () => Math.random() * 100,
+            y: '100vh',
+         },
+         {
+            duration: 0.5,
+            ease: 'none',
+            scale: () => 1 + Math.random() * .7,
+            stagger: 0.2,
+            y: '-170%',
+         }
+      );
+
+      ScrollTrigger.create({
+         animation: movement,
+         end: `${bubbles.length * 300}vh end`,
+         pin: true,
+         scroller: '#homeWrapper',
+         scrub: true,
+         start: 'top top',
+         trigger: '#imagesWrapper',
+      });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, []);
+
    return (
-      <Images_S bgHref={bgHref}>
+      <Images_S id="imagesWrapper" bgHref={bgHref}>
          <Title>{children}</Title>
          {bubbles.map(bubble => {
             return (
-               <div className="imageContainer" key={bubble.id}>
+               <div className="bubble" key={bubble.id}>
                   <Image
                      loading="eager"
                      alt="bubble image"
-                     src={STRAPI_URL + bubble.attributes.url}
+                     src={process.env.NEXT_PUBLIC_API + bubble.attributes.url}
                      layout="fill"
                      objectFit="cover"
                   />

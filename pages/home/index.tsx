@@ -6,7 +6,7 @@ import ButtonText from '../../components/ButtonText';
 import CommonButton from '../../components/CommonButton';
 import Product from '../../components/Product';
 import { Section } from '../../components/styledComponents';
-import { HEADERS, STRAPI_URL } from '../../globalVariables';
+import { HEADERS } from '../../utils/globals';
 import { HomeContent } from '../../types/home_api_responses';
 import { Product as Product_T } from '../../types/products_api_response';
 import { Room as Room_T } from '../../types/rooms_api_response';
@@ -15,6 +15,9 @@ import Layout from '../_layout';
 import Images from './components/Images';
 import Room from './components/Room';
 import Store from './components/Store';
+import { createContext, useEffect, useRef, useState } from 'react';
+import { setScrollSmooth } from '../../hooks/ScrollSmooth';
+import Scrollbar from 'smooth-scrollbar';
 
 interface Props {
    content: HomeContent;
@@ -41,11 +44,14 @@ const Hero = styled.section<BgProps>`
 `;
 
 const Home = ({ content, products, rooms, stores }: Props) => {
+   useEffect(() => {
+      setScrollSmooth('#homeWrapper', '', 'x');
+   }, []);
 
    return (
-      <>
+      <div id="homeWrapper" tw="h-screen">
          <Layout inHome>
-            <Hero bgHref={STRAPI_URL + content.background.data.attributes.url}>
+            <Hero bgHref={process.env.NEXT_PUBLIC_API + content.background.data.attributes.url}>
                <h1 tw="text-center text-titles text-6xl">{content.title}</h1>
                <Link href="/shop">
                   <a>
@@ -83,7 +89,7 @@ const Home = ({ content, products, rooms, stores }: Props) => {
                </div>
             </Section>
             <Images
-               bgHref={STRAPI_URL + content.bubblesBackground.data.attributes.url}
+               bgHref={process.env.NEXT_PUBLIC_API + content.bubblesBackground.data.attributes.url}
                bubbles={content.bubble.data}>
                {content.bubblesTitle}
             </Images>
@@ -107,21 +113,24 @@ const Home = ({ content, products, rooms, stores }: Props) => {
                })}
             </Section>
          </Layout>
-      </>
+      </div>
    );
 };
 
 export const getStaticProps: GetStaticProps = async ctx => {
-   const homeRes = await fetch(process.env.STRAPI_URL + '/api/home?populate=*', HEADERS);
+   const homeRes = await fetch(process.env.NEXT_PUBLIC_API + '/api/home?populate=*', HEADERS);
    const homeData = await homeRes.json();
 
-   const productsRes = await fetch(process.env.STRAPI_URL + '/api/products?populate=*', HEADERS);
+   const productsRes = await fetch(
+      process.env.NEXT_PUBLIC_API + '/api/products?populate=*',
+      HEADERS
+   );
    const productsData = await productsRes.json();
 
-   const roomsRes = await fetch(process.env.STRAPI_URL + '/api/rooms?populate=*', HEADERS);
+   const roomsRes = await fetch(process.env.NEXT_PUBLIC_API + '/api/rooms?populate=*', HEADERS);
    const roomsData = await roomsRes.json();
 
-   const storesRes = await fetch(process.env.STRAPI_URL + '/api/stores?populate=*', HEADERS);
+   const storesRes = await fetch(process.env.NEXT_PUBLIC_API + '/api/stores?populate=*', HEADERS);
    const storesData = await storesRes.json();
 
    return {

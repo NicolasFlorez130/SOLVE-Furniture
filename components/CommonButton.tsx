@@ -1,8 +1,8 @@
 import tw from 'twin.macro';
 import styled from 'styled-components';
-import { ChildrenString } from '../types/types';
+import { Button, ChildrenString } from '../types/component_types';
 
-interface Props extends ChildrenString {
+interface Props extends ChildrenString, Button {
    type: 'default' | 'primary' | 'inverse';
 }
 
@@ -30,8 +30,12 @@ const Button_S = styled.button<ButtonProps>`
    }}
 `;
 
-const CommonButton = ({ children, type }: Props) => {
-   return <Button_S colorScheme={type}>{children.toUpperCase()}</Button_S>;
+const CommonButton = ({ children, type, onClick }: Props) => {
+   return (
+      <Button_S onClick={onClick} colorScheme={type}>
+         {children.toUpperCase()}
+      </Button_S>
+   );
 };
 
 export default CommonButton;

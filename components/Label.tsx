@@ -1,4 +1,4 @@
-import { ChildrenString } from '../types/types';
+import { ChildrenString } from '../types/component_types';
 
 interface Props extends ChildrenString {
    size: '' | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;

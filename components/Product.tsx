@@ -2,7 +2,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import { STRAPI_URL } from '../globalVariables';
 import { Product as Product_T } from '../types/products_api_response';
 import { UsdFormatter } from '../utils/formatters';
 
@@ -34,13 +33,14 @@ const Product = ({ product }: Props) => {
             <ImageContainer className="aspect-[2/3]">
                <Image
                   alt={product.attributes.name}
-                  src={STRAPI_URL + product.attributes.image.data.attributes.url}
+                  src={process.env.NEXT_PUBLIC_API + product.attributes.image.data.attributes.url}
                   layout="fill"
                   tw="object-contain"
-                  priority
                />
             </ImageContainer>
-            <h5 tw="text-xl font-medium text-center pt-4">{product.attributes.name}</h5>
+            <h3 tw="font-cabinet font-medium text-xl text-center pt-4">
+               {product.attributes.name}
+            </h3>
             <p tw="text-base font-medium text-center">
                {UsdFormatter.format(product.attributes.price)} USD
             </p>

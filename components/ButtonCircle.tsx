@@ -1,5 +1,7 @@
 import tw from 'twin.macro';
-import { ChildrenString } from '../types/types';
+import { Button, ChildrenString } from '../types/component_types';
+
+interface Props extends ChildrenString, Button {}
 
 const Button_S = tw.button`
    bg-transparent
@@ -8,7 +10,7 @@ const Button_S = tw.button`
    rounded-full
 `;
 
-const ButtonCircle = ({ children }: ChildrenString) => {
+const ButtonCircle = ({ children }: Props) => {
    return <Button_S className="aspect-square">{children}</Button_S>;
 };
 

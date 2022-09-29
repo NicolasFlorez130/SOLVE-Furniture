@@ -1,13 +1,15 @@
 import tw from 'twin.macro';
 import Layout from '../_layout';
 import { GetStaticProps } from 'next';
-import { HEADERS, STRAPI_URL } from '../../globalVariables';
+import { HEADERS } from '../../utils/globals';
 import { Category } from '../../types/categories_api_responses';
 import styled from 'styled-components';
 import { Product as Product_T } from '../../types/products_api_response';
 import { Section } from '../../components/styledComponents';
 import Product from '../../components/Product';
 import Help from '../../components/Help';
+import { useEffect } from 'react';
+import { setScrollSmooth } from '../../hooks/ScrollSmooth';
 
 interface Props {
    categories: Category[];
@@ -29,33 +31,41 @@ const NavList = styled.nav`
    }
 `;
 
-const index = ({ categories, products }: Props) => {
+const Index = ({ categories, products }: Props) => {
+   useEffect(() => {
+      setScrollSmooth('#shopWrapper');
+   }, []);
 
    return (
-      <Layout>
-         <h1 tw="text-8xl text-center pb-14 pt-28">SHOP</h1>
-         <NavList className="border-y">
-            <ul>
-               {categories.map(category => {
-                  return <ul key={category.id}>{category.attributes.name}</ul>;
-               })}
-            </ul>
-         </NavList>
-         <Section tw="grid grid-cols-2 gap-8 justify-items-center">
-            {products.map(product => (
-               <Product product={product} key={product.id} />
-            ))}
-         </Section>
-         <Help />
-      </Layout>
+      <div id="shopWrapper" tw="h-screen">
+         <Layout>
+            <h1 tw="text-8xl text-center pb-14 pt-28">SHOP</h1>
+            <NavList className="border-y">
+               <ul>
+                  {categories.map(category => {
+                     return <ul key={category.id}>{category.attributes.name}</ul>;
+                  })}
+               </ul>
+            </NavList>
+            <Section tw="grid grid-cols-2 gap-8 justify-items-center">
+               {products.map(product => (
+                  <Product product={product} key={product.id} />
+               ))}
+            </Section>
+            <Help />
+         </Layout>
+      </div>
    );
 };
 
 export const getStaticProps: GetStaticProps = async ctx => {
-   const categoriesRes = await fetch(STRAPI_URL + '/api/categories', HEADERS);
+   const categoriesRes = await fetch(process.env.NEXT_PUBLIC_API + '/api/categories', HEADERS);
    const categoriesData = await categoriesRes.json();
 
-   const productsRes = await fetch(STRAPI_URL + '/api/products/?populate=*', HEADERS);
+   const productsRes = await fetch(
+      process.env.NEXT_PUBLIC_API + '/api/products/?populate=*',
+      HEADERS
+   );
    const productsData = await productsRes.json();
 
    return {
@@ -66,4 +76,4 @@ export const getStaticProps: GetStaticProps = async ctx => {
    };
 };
 
-export default index;
+export default Index;

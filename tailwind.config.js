@@ -18,9 +18,7 @@ module.exports = {
             'titles': '#FFF',
             'background': '#EDEDED'
          }
-
-
-      },
+      }
    },
    plugins: [
       plugin(({ addBase, theme }) => {

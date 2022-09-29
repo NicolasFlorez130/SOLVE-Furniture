@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import { STRAPI_URL } from '../../../globalVariables';
 import { Room as Room_T } from '../../../types/rooms_api_response';
 
 interface Props {
@@ -37,7 +36,7 @@ const Circle = styled.div<CircleProps>`
    }
 
    ${({ bgImage }) => {
-      return `background-image: url(${STRAPI_URL + bgImage})`;
+      return `background-image: url(${process.env.NEXT_PUBLIC_API + bgImage})`;
    }}
 `;
 

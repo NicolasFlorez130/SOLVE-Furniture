@@ -2,7 +2,6 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import CommonButton from '../../../components/CommonButton';
-import { STRAPI_URL } from '../../../globalVariables';
 import { Room as Room_T } from '../../../types/rooms_api_response';
 
 interface Props {
@@ -15,7 +14,7 @@ interface ContainerProps {
 
 const Container = styled.div<ContainerProps>`
    ${tw`
-      bg-blend-multiply bg-center bg-cover bg-opacity-30 bg-fixed bg-texts
+      bg-blend-multiply bg-center bg-cover bg-fixed bg-opacity-30 bg-texts
       flex flex-col flex-none justify-center items-center
       h-screen w-screen
    `}
@@ -28,7 +27,7 @@ const Container = styled.div<ContainerProps>`
    }
 
    ${({ bgUrl }) => {
-      return `background-image: url(${STRAPI_URL + bgUrl})`;
+      return `background-image: url(${process.env.NEXT_PUBLIC_API + bgUrl})`;
    }}
 `;
 

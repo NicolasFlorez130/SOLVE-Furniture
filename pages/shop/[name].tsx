@@ -1,11 +1,13 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Image from 'next/image';
+import { useEffect, useRef } from 'react';
 import tw from 'twin.macro';
-import ButtonCircle from '../../components/ButtonCircle';
 import CommonButton from '../../components/CommonButton';
 import Product from '../../components/Product';
 import { Section } from '../../components/styledComponents';
-import { STRAPI_URL } from '../../globalVariables';
+import { add } from '../../contexts/cart_slice';
+import { useTypedDispatch, useTypedSelector } from '../../hooks/redux';
+import { setScrollSmooth } from '../../hooks/ScrollSmooth';
 import { Product as Product_T, Products } from '../../types/products_api_response';
 import { UsdFormatter } from '../../utils/formatters';
 import Layout from '../_layout';
@@ -27,67 +29,92 @@ const SubTitle = tw.h2`
 `;
 
 const Name = ({ product, relatedProducts }: Props) => {
+   const cartDispatch = useTypedDispatch();
+
+   const Input = useRef<HTMLInputElement>(null);
+
+   const addProduct = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.preventDefault();
+      const val = Input.current?.value ? parseInt(Input.current?.value) : 0;
+
+      const products = [];
+
+      for (let i = 0; i < val; i++) {
+         products.push(product);
+      }
+      cartDispatch(add(products));
+   };
+
    const descriptionParagraph = product.attributes.description_detailed.text.split('-').at(0);
    const descriptionLi = [...product.attributes.description_detailed.text.split('-')];
-   descriptionLi.shift();   
+   descriptionLi.shift();
+
+   useEffect(() => {
+      setScrollSmooth('#productWrapper');
+   }, []);
 
    return (
-      <Layout>
-         <Section tw="pt-28">
-            <h1 tw="text-5xl">{product.attributes.name}</h1>
-            <p tw="font-medium my-4">{UsdFormatter.format(product.attributes.price)} USD</p>
-            <p>{product.attributes.description_small}</p>
-            <form tw="flex flex-col my-8">
-               <input
-                  tw="border border-texts mb-6 py-4 px-8 rounded-full"
-                  type="number"
-                  defaultValue={1}
-                  step={1}
+      <div id="productWrapper" tw="h-screen">
+         <Layout>
+            <Section tw="pt-28">
+               <h1 tw="text-5xl">{product.attributes.name}</h1>
+               <p tw="font-medium my-4">{UsdFormatter.format(product.attributes.price)} USD</p>
+               <p>{product.attributes.description_small}</p>
+               <form tw="flex flex-col my-8">
+                  <input
+                     ref={Input}
+                     tw="border border-texts mb-6 py-4 px-8 rounded-full"
+                     type="number"
+                     defaultValue={1}
+                     step={1}
+                  />
+                  <CommonButton onClick={addProduct} type="primary">
+                     ADD TO CART
+                  </CommonButton>
+               </form>
+               <ul
+                  className="border-y-[.1px]"
+                  tw="items-center border-texts border-opacity-30 flex gap-4 px-2 py-6">
+                  <li>DETAILS</li>
+                  <li>DELIVERY</li>
+                  <li>RETURNS</li>
+               </ul>
+            </Section>
+            <div className="imageContainer aspect-[2/3]" tw="relative w-full">
+               <Image
+                  src={process.env.NEXT_PUBLIC_API + product.attributes.image.data.attributes.url}
+                  alt={product.attributes.name}
+                  layout="fill"
+                  objectFit="contain"
+                  priority
                />
-               <CommonButton type="primary">ADD TO CART</CommonButton>
-            </form>
-            <ul
-               className="border-y-[.1px]"
-               tw="items-center border-texts border-opacity-30 flex gap-4 px-2 py-6">
-               <li>DETAILS</li>
-               <li>DELIVERY</li>
-               <li>RETURNS</li>
-            </ul>
-         </Section>
-         <div className="imageContainer aspect-[2/3]" tw="relative w-full">
-            <Image
-               src={STRAPI_URL + product.attributes.image.data.attributes.url}
-               alt={product.attributes.name}
-               layout="fill"
-               objectFit="contain"
-               priority
-            />
-         </div>
-         <Section>
-            <SubTitle>{product.attributes.description_detailed.label}</SubTitle>
-            <p>{descriptionParagraph}</p>
-            <ul>
-               {descriptionLi?.map((li, i) => (
-                  <li key={i} tw="mt-4 text-[1.2rem]">
-                     <ArrowSvg /> {li}
-                  </li>
-               ))}
-            </ul>
-         </Section>
-         <Section className="border-y" tw="border-texts border-opacity-30">
-            <SubTitle>Related products</SubTitle>
-            <div tw="grid grid-cols-2 gap-8">
-               {relatedProducts.map(prod => (
-                  <Product key={prod.id} product={prod} />
-               ))}
             </div>
-         </Section>
-      </Layout>
+            <Section>
+               <SubTitle>{product.attributes.description_detailed.label}</SubTitle>
+               <p>{descriptionParagraph}</p>
+               <ul>
+                  {descriptionLi?.map((li, i) => (
+                     <li key={i} tw="mt-4 text-[1.2rem]">
+                        <ArrowSvg /> {li}
+                     </li>
+                  ))}
+               </ul>
+            </Section>
+            <Section className="border-y" tw="border-texts border-opacity-30">
+               <SubTitle>Related products</SubTitle>
+               <div tw="grid grid-cols-2 gap-8">
+                  {relatedProducts.map(prod => (
+                     <Product key={prod.id} product={prod} />
+                  ))}
+               </div>
+            </Section>
+         </Layout>
+      </div>
    );
 };
 
 export const getStaticPaths: GetStaticPaths = async ctx => {
-   const res = await fetch(STRAPI_URL + '/api/products?populate=*');
+   const res = await fetch(process.env.NEXT_PUBLIC_API + '/api/products?populate=*');
    const data: Products = await res.json();
 
    return {
@@ -99,7 +126,7 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-   const productRes = await fetch(STRAPI_URL + '/api/products?populate=*');
+   const productRes = await fetch(process.env.NEXT_PUBLIC_API + '/api/products?populate=*');
    const productData: Products = await productRes.json();
 
    const product = productData.data.find(

@@ -1,17 +1,23 @@
-import { GetStaticProps } from 'next';
 import Link from 'next/link';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import { HEADERS, STRAPI_URL } from '../globalVariables';
+import { HEADERS } from '../utils/globals';
 import { Product } from '../types/products_api_response';
 import Label from './Label';
+import gsap from 'gsap';
+import { useTypedSelector } from '../hooks/redux';
 
-interface Props {
+interface StyledProps {
    inHome?: boolean;
 }
 
-const Header_S = styled.header<Props>`
+interface Props extends StyledProps {
+   changeVisibility: (value: 'open' | 'close') => void;
+   cartHandler: (value: 'open' | 'close') => void;
+}
+
+const Header_S = styled.header<StyledProps>`
    ${tw`
       flex justify-between
       m-auto p-5
@@ -20,6 +26,10 @@ const Header_S = styled.header<Props>`
       w-full
       z-10
    `}
+
+   .line {
+      ${({ inHome }) => (inHome ? tw`border-titles` : tw`border-texts`)}
+   }
 
    ${({ inHome }) => (inHome ? tw`text-titles` : tw`text-texts`)}
 `;
@@ -44,56 +54,129 @@ const Menu = styled.div`
    }
 `;
 
-const CartBubble = styled.div<Props>`
+const CartBubble = styled.div<StyledProps>`
    ${tw`
       rounded-full
       text-center
       w-6 h-6
    `}
 
-   ${({ inHome }) => (inHome ? tw`bg-texts text-background` : tw`text-texts bg-background`)}
+   ${({ inHome }) => (inHome ? tw`text-texts bg-titles` : tw`text-titles bg-texts`)}
 `;
 
-const Header = ({ inHome }: Props) => {
-   const linesColor = inHome ? 'border-titles' : 'border-texts';
-
-   const [inCart, setInCart] = useState(0);
+const Header = ({ inHome, changeVisibility, cartHandler }: Props) => {
+   const cartValue = useTypedSelector(store => store.cart.products.length);
    const [featured, setFeatured] = useState<Product[]>([]);
 
    const getFeaturedProducts = useCallback(async () => {
-      const res = await fetch(STRAPI_URL + '/api/products?populate=*', HEADERS);
+      const res = await fetch(process.env.NEXT_PUBLIC_API + '/api/products?populate=*', HEADERS);
       const data = await res.json();
       setFeatured(data.data);
    }, []);
 
+   const menu = useRef<HTMLDivElement>(null);
+   const container = useRef<HTMLDivElement>(null);
+   const currentState = useRef(0);
+   const cartState = useRef(0);
+
+   const toggleMenu = () => {
+      container.current?.classList.toggle('h-screen');
+
+      if (!currentState.current) {
+         menu.current?.classList.remove('hidden');
+
+         gsap.to('.lineTop', {
+            keyframes: {
+               '0%': { width: '100%', rotation: 0 },
+               '50%': { width: '50%', rotation: 0, top: 0 },
+               '100%': { rotation: 45, top: '50%' },
+            },
+            duration: 0.3,
+         });
+         gsap.to('.lineBot', {
+            keyframes: {
+               '0%': { width: '80%', rotation: 0 },
+               '50%': { width: '50%', rotation: 0, bottom: 0 },
+               '100%': { rotation: -45, bottom: '50%' },
+            },
+            duration: 0.3,
+         });
+         gsap.fromTo(
+            menu.current,
+            { opacity: 0, yPercent: -10 },
+            { opacity: 1, yPercent: 0, duration: 0.3 }
+         );
+
+         changeVisibility('open');
+         currentState.current = 1;
+      } else {
+         gsap.to('.lineTop', {
+            keyframes: {
+               '50%': { width: '50%', rotation: 0, top: 0 },
+               '100%': { width: '100%', rotation: 0 },
+            },
+            duration: 0.3,
+         });
+         gsap.to('.lineBot', {
+            keyframes: {
+               '50%': { width: '50%', rotation: 0, bottom: 0 },
+               '100%': { width: '80%', rotation: 0 },
+            },
+            duration: 0.3,
+         });
+         gsap.fromTo(
+            menu.current,
+            { opacity: 1, yPercent: 0 },
+            {
+               opacity: 0,
+               yPercent: -10,
+               duration: 0.3,
+               onComplete: () => menu.current?.classList.add('hidden'),
+            }
+         );
+
+         changeVisibility('close');
+         currentState.current = 0;
+      }
+   };
+
    useEffect(() => {
       getFeaturedProducts();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, []);
+   }, [getFeaturedProducts]);
 
    return (
-      <div tw="absolute w-full z-20">
+      <div ref={container} tw="absolute overflow-hidden w-full z-20">
          <Header_S inHome={inHome}>
             <Link href="/home">
                <a>
                   <Label size={4}>SØLVE</Label>
                </a>
             </Link>
-            <ul tw="flex gap-4 items-center">
+            <ul tw="flex gap-2 items-center">
                <li>
                   <Link href="/shop">SHOP</Link>
                </li>
-               <li tw="flex items-start gap-1">
+               <li
+                  onClick={() => {
+                     cartHandler('open');
+                  }}
+                  tw="flex items-start gap-2">
                   <button>CART</button>
-                  <CartBubble className="aspect-square">{inCart}</CartBubble>
+                  <CartBubble inHome={inHome} className="aspect-square">
+                     {cartValue}
+                  </CartBubble>
                </li>
-               <button tw="w-12 h-4 grid grid-rows-2 justify-items-end">
-                  <div className={linesColor} tw="border-t self-start w-full"></div>
-                  <div className={linesColor} tw="border-b self-end w-4/5"></div>
-               </button>
+               <li onClick={toggleMenu} tw="relative w-12 h-4">
+                  <div
+                     className="line lineTop"
+                     tw="absolute border-t right-0 self-start top-0 w-full"></div>
+                  <div
+                     className="line lineBot"
+                     tw="absolute border-b bottom-0 right-0 self-end w-4/5"></div>
+               </li>
             </ul>
          </Header_S>
-         <div tw="hidden">
+         <div ref={menu} className="hidden">
             <Menu>
                <ul>
                   <li>
@@ -125,8 +208,8 @@ const Header = ({ inHome }: Props) => {
                </div>
             </Menu>
             <div
-               className="filter"
-               tw="absolute w-screen h-screen inset-0 bg-texts bg-opacity-30"></div>
+               onClick={toggleMenu}
+               tw="absolute bg-texts bg-opacity-50 h-screen top-0 w-screen"></div>
          </div>
       </div>
    );

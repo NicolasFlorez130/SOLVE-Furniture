@@ -1,12 +1,10 @@
 import tw from 'twin.macro';
-import { ChildrenString } from './../types/types.d';
+import { Button, ChildrenString } from '../types/component_types';
 
-interface Props extends ChildrenString {
-   arrowPos: 'after' | 'before';
-}
+interface Props extends ChildrenString, ArrowProps, Button {}
 
 interface ArrowProps {
-   pos: 'after' | 'before';
+   arrowPos: 'after' | 'before';
 }
 
 const Button_S = tw.button`
@@ -14,10 +12,10 @@ const Button_S = tw.button`
    items-center gap-x-2
 `;
 
-const Arrow = ({ pos }: ArrowProps) => {
+const Arrow = ({ arrowPos }: ArrowProps) => {
    return (
       <svg
-         className={pos === 'before' ? 'order-[-1]' : ''}
+         className={arrowPos === 'before' ? 'order-[-1]' : ''}
          width="32"
          height="6"
          viewBox="0 0 32 6"
@@ -33,7 +31,7 @@ const ButtonText = ({ children, arrowPos }: Props) => {
    return (
       <Button_S>
          {children.toUpperCase()}
-         <Arrow pos={arrowPos} />
+         <Arrow arrowPos={arrowPos} />
       </Button_S>
    );
 };

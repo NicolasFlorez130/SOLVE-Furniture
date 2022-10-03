@@ -4,28 +4,25 @@ import { HEADERS } from '../../utils/globals';
 import { Room as Room_T } from '../../types/rooms_api_response';
 import Layout from '../_layout';
 import Room from './components/Room';
-import { useEffect } from 'react';
-import { setScrollSmooth } from '../../hooks/ScrollSmooth';
+import { TransitionScreen } from '../_transitionScreen';
 
 interface Props {
    rooms: Room_T[];
 }
 
 const Index = ({ rooms }: Props) => {
-   useEffect(() => {
-      setScrollSmooth('#roomsWrapper');
-   }, []);
-
    return (
-      <Layout inHome={true} footerLess={true}>
-         <div id="roomsWrapper" tw="h-screen">
-            <div tw="flex">
-               {rooms.map(room => {
-                  return <Room key={room.id} room={room} />;
-               })}
+      <TransitionScreen>
+         <Layout inHome={true} footerLess={true}>
+            <div id="roomsWrapper" tw="h-screen overflow-scroll">
+               <div tw="flex">
+                  {rooms.map(room => {
+                     return <Room key={room.id} room={room} />;
+                  })}
+               </div>
             </div>
-         </div>
-      </Layout>
+         </Layout>
+      </TransitionScreen>
    );
 };
 

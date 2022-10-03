@@ -1,7 +1,7 @@
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import { BgProps } from '..';
@@ -42,10 +42,10 @@ const Title = tw.h2`
    z-10
 `;
 
-gsap.registerPlugin(ScrollTrigger);
-
 const Images = ({ children, bgHref, bubbles }: Props) => {
    useEffect(() => {
+      gsap.registerPlugin(ScrollTrigger);
+
       const movement = gsap.fromTo(
          '.bubble',
          {
@@ -56,8 +56,8 @@ const Images = ({ children, bgHref, bubbles }: Props) => {
          {
             duration: 0.5,
             ease: 'none',
-            scale: () => 1 + Math.random() * .7,
-            stagger: 0.2,
+            scale: () => 1 + Math.random() * 0.7,
+            stagger: 0.15,
             y: '-170%',
          }
       );
@@ -71,6 +71,10 @@ const Images = ({ children, bgHref, bubbles }: Props) => {
          start: 'top top',
          trigger: '#imagesWrapper',
       });
+
+      return () => {
+         movement.kill();
+      };
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
 

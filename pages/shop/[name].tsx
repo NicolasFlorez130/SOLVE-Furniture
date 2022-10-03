@@ -11,6 +11,7 @@ import { setScrollSmooth } from '../../hooks/ScrollSmooth';
 import { Product as Product_T, Products } from '../../types/products_api_response';
 import { UsdFormatter } from '../../utils/formatters';
 import Layout from '../_layout';
+import { TransitionScreen } from '../_transitionScreen';
 
 interface Props {
    product: Product_T;
@@ -50,66 +51,70 @@ const Name = ({ product, relatedProducts }: Props) => {
    descriptionLi.shift();
 
    useEffect(() => {
-      setScrollSmooth('#productWrapper');
+      setScrollSmooth('#productWrapper', '', 'x');
    }, []);
 
    return (
-      <div id="productWrapper" tw="h-screen">
-         <Layout>
-            <Section tw="pt-28">
-               <h1 tw="text-5xl">{product.attributes.name}</h1>
-               <p tw="font-medium my-4">{UsdFormatter.format(product.attributes.price)} USD</p>
-               <p>{product.attributes.description_small}</p>
-               <form tw="flex flex-col my-8">
-                  <input
-                     ref={Input}
-                     tw="border border-texts mb-6 py-4 px-8 rounded-full"
-                     type="number"
-                     defaultValue={1}
-                     step={1}
+      <TransitionScreen>
+         <div id="productWrapper" tw="h-screen">
+            <Layout>
+               <Section tw="pt-28">
+                  <h1 tw="text-5xl">{product.attributes.name}</h1>
+                  <p tw="font-medium my-4">{UsdFormatter.format(product.attributes.price)} USD</p>
+                  <p>{product.attributes.description_small}</p>
+                  <form tw="flex flex-col my-8">
+                     <input
+                        ref={Input}
+                        tw="border border-texts mb-6 py-4 px-8 rounded-full"
+                        type="number"
+                        defaultValue={1}
+                        step={1}
+                     />
+                     <CommonButton onClick={addProduct} type="primary">
+                        ADD TO CART
+                     </CommonButton>
+                  </form>
+                  <ul
+                     className="border-y-[.1px]"
+                     tw="items-center border-texts border-opacity-30 flex gap-4 px-2 py-6">
+                     <li>DETAILS</li>
+                     <li>DELIVERY</li>
+                     <li>RETURNS</li>
+                  </ul>
+               </Section>
+               <div className="imageContainer aspect-[2/3]" tw="relative w-full">
+                  <Image
+                     src={
+                        process.env.NEXT_PUBLIC_API + product.attributes.image.data.attributes.url
+                     }
+                     alt={product.attributes.name}
+                     layout="fill"
+                     objectFit="contain"
+                     priority
                   />
-                  <CommonButton onClick={addProduct} type="primary">
-                     ADD TO CART
-                  </CommonButton>
-               </form>
-               <ul
-                  className="border-y-[.1px]"
-                  tw="items-center border-texts border-opacity-30 flex gap-4 px-2 py-6">
-                  <li>DETAILS</li>
-                  <li>DELIVERY</li>
-                  <li>RETURNS</li>
-               </ul>
-            </Section>
-            <div className="imageContainer aspect-[2/3]" tw="relative w-full">
-               <Image
-                  src={process.env.NEXT_PUBLIC_API + product.attributes.image.data.attributes.url}
-                  alt={product.attributes.name}
-                  layout="fill"
-                  objectFit="contain"
-                  priority
-               />
-            </div>
-            <Section>
-               <SubTitle>{product.attributes.description_detailed.label}</SubTitle>
-               <p>{descriptionParagraph}</p>
-               <ul>
-                  {descriptionLi?.map((li, i) => (
-                     <li key={i} tw="mt-4 text-[1.2rem]">
-                        <ArrowSvg /> {li}
-                     </li>
-                  ))}
-               </ul>
-            </Section>
-            <Section className="border-y" tw="border-texts border-opacity-30">
-               <SubTitle>Related products</SubTitle>
-               <div tw="grid grid-cols-2 gap-8">
-                  {relatedProducts.map(prod => (
-                     <Product key={prod.id} product={prod} />
-                  ))}
                </div>
-            </Section>
-         </Layout>
-      </div>
+               <Section>
+                  <SubTitle>{product.attributes.description_detailed.label}</SubTitle>
+                  <p>{descriptionParagraph}</p>
+                  <ul>
+                     {descriptionLi?.map((li, i) => (
+                        <li key={i} tw="mt-4 text-[1.2rem]">
+                           <ArrowSvg /> {li}
+                        </li>
+                     ))}
+                  </ul>
+               </Section>
+               <Section className="border-y" tw="border-texts border-opacity-30">
+                  <SubTitle>Related products</SubTitle>
+                  <div tw="grid grid-cols-2 gap-8">
+                     {relatedProducts.map(prod => (
+                        <Product key={prod.id} product={prod} />
+                     ))}
+                  </div>
+               </Section>
+            </Layout>
+         </div>
+      </TransitionScreen>
    );
 };
 

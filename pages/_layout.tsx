@@ -4,6 +4,7 @@ import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'r
 import tw from 'twin.macro';
 import Cart from '../components/Cart';
 import gsap from 'gsap';
+import { useRouter } from 'next/router';
 
 interface Layout {
    children: any;
@@ -12,6 +13,8 @@ interface Layout {
 }
 
 const Layout = ({ children, inHome = false, footerLess = false }: Layout) => {
+   const router = useRouter();
+
    const [visibility, setVisibility] = useState('');
    const container = useRef(null);
 
@@ -42,6 +45,13 @@ const Layout = ({ children, inHome = false, footerLess = false }: Layout) => {
          });
       }
 
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, []);
+
+   useEffect(() => {
+      router.events.on('routeChangeStart', () => {
+         toggleCart('close');
+      });
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
 

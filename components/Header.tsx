@@ -77,7 +77,6 @@ const Header = ({ inHome, changeVisibility, cartHandler }: Props) => {
    const menu = useRef<HTMLDivElement>(null);
    const container = useRef<HTMLDivElement>(null);
    const currentState = useRef(0);
-   const cartState = useRef(0);
 
    const toggleMenu = () => {
       container.current?.classList.toggle('h-screen');
@@ -142,7 +141,8 @@ const Header = ({ inHome, changeVisibility, cartHandler }: Props) => {
 
    useEffect(() => {
       getFeaturedProducts();
-   }, [getFeaturedProducts]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, []);
 
    return (
       <div ref={container} tw="absolute overflow-hidden w-full z-20">
@@ -166,7 +166,7 @@ const Header = ({ inHome, changeVisibility, cartHandler }: Props) => {
                      {cartValue}
                   </CartBubble>
                </li>
-               <li onClick={toggleMenu} tw="relative w-12 h-4">
+               <li onClick={toggleMenu} tw="cursor-pointer relative w-12 h-4">
                   <div
                      className="line lineTop"
                      tw="absolute border-t right-0 self-start top-0 w-full"></div>

@@ -10,6 +10,7 @@ import Product from '../../components/Product';
 import Help from '../../components/Help';
 import { useEffect } from 'react';
 import { setScrollSmooth } from '../../hooks/ScrollSmooth';
+import { TransitionScreen } from '../_transitionScreen';
 
 interface Props {
    categories: Category[];
@@ -33,28 +34,30 @@ const NavList = styled.nav`
 
 const Index = ({ categories, products }: Props) => {
    useEffect(() => {
-      setScrollSmooth('#shopWrapper');
+      setScrollSmooth('#shopWrapper', '', 'x');
    }, []);
 
    return (
-      <div id="shopWrapper" tw="h-screen">
-         <Layout>
-            <h1 tw="text-8xl text-center pb-14 pt-28">SHOP</h1>
-            <NavList className="border-y">
-               <ul>
-                  {categories.map(category => {
-                     return <ul key={category.id}>{category.attributes.name}</ul>;
-                  })}
-               </ul>
-            </NavList>
-            <Section tw="grid grid-cols-2 gap-8 justify-items-center">
-               {products.map(product => (
-                  <Product product={product} key={product.id} />
-               ))}
-            </Section>
-            <Help />
-         </Layout>
-      </div>
+      <TransitionScreen>
+         <div id="shopWrapper" tw="h-screen">
+            <Layout>
+               <h1 tw="text-8xl text-center pb-14 pt-28">SHOP</h1>
+               <NavList className="border-y">
+                  <ul>
+                     {categories.map(category => {
+                        return <ul key={category.id}>{category.attributes.name}</ul>;
+                     })}
+                  </ul>
+               </NavList>
+               <Section tw="grid grid-cols-2 gap-8 justify-items-center">
+                  {products.map(product => (
+                     <Product product={product} key={product.id} />
+                  ))}
+               </Section>
+               <Help />
+            </Layout>
+         </div>
+      </TransitionScreen>
    );
 };
 

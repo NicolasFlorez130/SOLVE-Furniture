@@ -11,7 +11,7 @@ const Container = styled(Section)`
    h2 {
       ${tw`
          text-5xl text-center
-         py-10
+         pb-10
       `}
    }
 

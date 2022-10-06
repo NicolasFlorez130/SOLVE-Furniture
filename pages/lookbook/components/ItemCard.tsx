@@ -58,7 +58,7 @@ const ItemCard = ({ item, pos, openFunc }: Props) => {
 
    return (
       <Container className={'item-' + pos} onClick={() => openFunc(item)}>
-         <h3>OPEN</h3>
+         <h3>VIEW</h3>
          <Image
             src={process.env.NEXT_PUBLIC_API + item.attributes.image.data.attributes.url}
             alt={name + ' image'}

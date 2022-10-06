@@ -8,7 +8,7 @@ import { Product as Product_T } from '../../types/products_api_response';
 import { Section } from '../../components/styledComponents';
 import Product from '../../components/Product';
 import Help from '../../components/Help';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { setScrollSmooth } from '../../hooks/ScrollSmooth';
 import { TransitionScreen } from '../_transitionScreen';
 
@@ -33,9 +33,26 @@ const NavList = styled.nav`
 `;
 
 const Index = ({ categories, products }: Props) => {
+   const [shownProducts, setProducts] = useState(products);
+
+   const allProducts = useRef<Product_T[]>(products);
+
    useEffect(() => {
       setScrollSmooth('#shopWrapper', '', 'x');
    }, []);
+
+   const changeCategory = (category: string) => {
+      const newVal =
+         category === 'all'
+            ? allProducts.current
+            : allProducts.current.filter(
+                 product =>
+                    product.attributes.category.data.attributes.name.toLowerCase() ===
+                    category.toLowerCase()
+              );
+              
+      setProducts(newVal);
+   };
 
    return (
       <TransitionScreen>
@@ -45,12 +62,21 @@ const Index = ({ categories, products }: Props) => {
                <NavList className="border-y">
                   <ul>
                      {categories.map(category => {
-                        return <ul key={category.id}>{category.attributes.name}</ul>;
+                        return (
+                           <li key={category.id}>
+                              <button onClick={() => changeCategory(category.attributes.name)}>
+                                 {category.attributes.name}
+                              </button>
+                           </li>
+                        );
                      })}
+                     <li>
+                        <button onClick={() => changeCategory('all')}>ALL</button>
+                     </li>
                   </ul>
                </NavList>
-               <Section tw="grid grid-cols-2 gap-8 justify-items-center">
-                  {products.map(product => (
+               <Section tw="grid grid-cols-2 gap-8 justify-items-center md:( grid-cols-3 )">
+                  {shownProducts.map(product => (
                      <Product product={product} key={product.id} />
                   ))}
                </Section>

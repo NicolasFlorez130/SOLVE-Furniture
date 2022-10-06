@@ -3,10 +3,12 @@ import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'reac
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import { HEADERS } from '../utils/globals';
-import { Product } from '../types/products_api_response';
+import { Product as Product_T } from '../types/products_api_response';
 import Label from './Label';
 import gsap from 'gsap';
 import { useTypedSelector } from '../hooks/redux';
+import { Section } from './styledComponents';
+import Product from './Product';
 
 interface StyledProps {
    inHome?: boolean;
@@ -19,13 +21,21 @@ interface Props extends StyledProps {
 
 const Header_S = styled.header<StyledProps>`
    ${tw`
-      flex justify-between
+      grid grid-cols-2
       m-auto p-5
       max-w-screen-2xl
       relative
       w-full
       z-10
    `}
+
+   ${tw`
+      md:( grid-cols-3 )
+   `}
+
+   a {
+      cursor: pointer;
+   }
 
    .line {
       ${({ inHome }) => (inHome ? tw`border-titles` : tw`border-texts`)}
@@ -37,19 +47,62 @@ const Header_S = styled.header<StyledProps>`
 const Menu = styled.div`
    ${tw`
       bg-background
-      grid grid-cols-2
-      p-6
       relative
       z-10   
    `}
 
-   ul {
-      h2 {
-         ${tw`text-2xl`}
+   .rowsContainer {
+      ${tw`
+         grid grid-cols-2
+         p-6
+      `}
+
+      ${tw`
+         lg:( 
+            grid-cols-[1fr 1fr 3fr]
+         )
+      `}
+
+      ul {
+         h2 {
+            ${tw`text-2xl`}
+         }
+
+         li {
+            ${tw`mb-4`}
+         }
       }
 
-      li {
-         ${tw`mb-4`}
+      .featured {
+         ${tw`
+            hidden
+         `}
+
+         ${tw`
+            lg:(
+               grid grid-cols-3 gap-2
+            )
+         `}
+
+         .product {
+            ${tw`
+               grid grid-cols-[60% 40%]
+            `};
+
+            h3,
+            p {
+               ${tw`
+                  ml-2
+                  text-left text-lg font-normal
+               `}
+            }
+
+            p {
+               ${tw`
+                  text-sm
+               `}
+            }
+         }
       }
    }
 `;
@@ -66,7 +119,7 @@ const CartBubble = styled.div<StyledProps>`
 
 const Header = ({ inHome, changeVisibility, cartHandler }: Props) => {
    const cartValue = useTypedSelector(store => store.cart.products.length);
-   const [featured, setFeatured] = useState<Product[]>([]);
+   const [featured, setFeatured] = useState<Product_T[]>([]);
 
    const getFeaturedProducts = useCallback(async () => {
       const res = await fetch(process.env.NEXT_PUBLIC_API + '/api/products?populate=*', HEADERS);
@@ -147,12 +200,15 @@ const Header = ({ inHome, changeVisibility, cartHandler }: Props) => {
    return (
       <div ref={container} tw="absolute overflow-hidden w-full z-20">
          <Header_S inHome={inHome}>
+            <Link href="/lookbook">
+               <a tw="hidden md:( block )">LOOKBOOK</a>
+            </Link>
             <Link href="/home">
-               <a>
+               <a tw="md:( justify-self-center )">
                   <Label size={4}>SØLVE</Label>
                </a>
             </Link>
-            <ul tw="flex gap-2 items-center">
+            <ul tw="flex gap-2 items-center justify-self-end md:( gap-6 )">
                <li>
                   <Link href="/shop">SHOP</Link>
                </li>
@@ -178,34 +234,35 @@ const Header = ({ inHome, changeVisibility, cartHandler }: Props) => {
          </Header_S>
          <div ref={menu} className="hidden">
             <Menu>
-               <ul>
-                  <li>
-                     <h2>SOLVE</h2>
-                  </li>
-                  <li>
-                     <Link href="/home">HOME</Link>
-                  </li>
-                  <li>
-                     <Link href="/rooms">ROOMS</Link>
-                  </li>
-               </ul>
-               <ul>
-                  <li>
-                     <h2>SHOP</h2>
-                  </li>
-                  <li>
-                     <Link href="/shop">ALL PRODUCTS</Link>
-                  </li>
-                  <li>
-                     <Link href="/lookbook">LOOKBOOK</Link>
-                  </li>
-               </ul>
-               <div className="featured" tw="hidden">
-                  {featured.map(
-                     feat =>
-                        feat.attributes.featured && <h2 key={feat.id}>{feat.attributes.name}</h2>
-                  )}
-               </div>
+               <Section as="div" className="rowsContainer">
+                  <ul>
+                     <li>
+                        <h2>SOLVE</h2>
+                     </li>
+                     <li>
+                        <Link href="/home">HOME</Link>
+                     </li>
+                     <li>
+                        <Link href="/rooms">ROOMS</Link>
+                     </li>
+                  </ul>
+                  <ul>
+                     <li>
+                        <h2>SHOP</h2>
+                     </li>
+                     <li>
+                        <Link href="/shop">ALL PRODUCTS</Link>
+                     </li>
+                     <li>
+                        <Link href="/lookbook">LOOKBOOK</Link>
+                     </li>
+                  </ul>
+                  <div className="featured">
+                     {featured.map(
+                        feat => feat.attributes.featured && <Product key={feat.id} product={feat} />
+                     )}
+                  </div>
+               </Section>
             </Menu>
             <div
                onClick={toggleMenu}

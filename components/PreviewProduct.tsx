@@ -18,6 +18,12 @@ const Container = styled.div`
       px-6 py-4
    `}
 
+   ${tw` 
+      xl:(
+         grid-cols-[1fr 3fr max-content]
+      )
+   `}
+
    .imageContainer {
       aspect-ratio: 2/3;
       ${tw`

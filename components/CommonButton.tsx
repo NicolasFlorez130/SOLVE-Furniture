@@ -1,6 +1,7 @@
 import tw from 'twin.macro';
 import styled from 'styled-components';
 import { Button, ChildrenString } from '../types/component_types';
+import { forwardRef } from 'react';
 
 interface Props extends ChildrenString, Button {
    type: 'default' | 'primary' | 'inverse';
@@ -11,8 +12,11 @@ interface ButtonProps {
 }
 
 const Button_S = styled.button<ButtonProps>`
+   height: min-content;
+
    ${tw`
       border
+      flex-none
       px-8 py-4
       rounded-full 
       whitespace-nowrap

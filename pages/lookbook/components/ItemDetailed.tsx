@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styled from 'styled-components';
 import tw from 'twin.macro';
+import ButtonText from '../../../components/ButtonText';
 import CommonButton from '../../../components/CommonButton';
 import { Product } from '../../../types/products_api_response';
 import { Room } from '../../../types/rooms_api_response';
@@ -15,52 +16,77 @@ const Container = styled.div`
    ${tw`
       absolute
       bg-background
-      hidden grid-cols-1 justify-items-center
-      p-6
+      hidden
+      overflow-scroll
+      p-6 pb-12
       top-full
-      w-screen min-h-screen
+      w-screen h-screen
    `}
 
-   .closeButton {
+   ${tw`
+      xs:(
+         justify-self-center
+         w-2/3    
+      )
+   `}
+
+   ${tw`
+      md:(
+         w-3/5
+      )
+   `}
+
+   ${tw`
+      lg:(
+         w-1/3
+      )
+   `}
+
+   .subCont {
       ${tw`
-         absolute
-         justify-self-start
-         mt-20 ml-6
+         grid grid-cols-1 justify-items-center
+         // min-h-screen
+         w-full
+      `}
+
+      .closeButton {
+         ${tw`
+         mt-14
          text-lg
-         w-8
       `}
-   }
+      }
 
-   h1 {
-      ${tw`
-         mb-6 mt-12
-         text-4xl 
-      `}
-   }
+      h1 {
+         ${tw`
+            my-6
+            text-4xl 
+         `}
+      }
 
-   .imageContainer {
-      ${tw`
+      .imageContainer {
+         ${tw`
          aspect-ratio[2/3]
          overflow-hidden
          relative
          rounded-full
          w-full
       `}
-   }
+      }
 
-   .textContainer {
-      p {
-         ${tw`
+      .textContainer {
+         p {
+            ${tw`
             my-6
             text-center
          `}
+         }
       }
-   }
 
-   button:not(.closeButton) {
-      ${tw`
+      button:not(.closeButton) {
+         ${tw`
          mb-6 
       `}
+      }
    }
 `;
 
@@ -74,23 +100,27 @@ const ItemDetailed = ({ item, closeFunc }: Props) => {
    return (
       item && (
          <Container id="itemWrapper">
-            <button className="closeButton" onClick={closeFunc}>
-               <ArrowSvg />
-            </button>
-            <h1>{name}</h1>
-            <div className="imageContainer">
-               <Image
-                  src={process.env.NEXT_PUBLIC_API + item.attributes.image.data.attributes.url}
-                  alt={name}
-                  layout="fill"
-               />
+            <div className="subCont">
+               <button className="closeButton" onClick={closeFunc}>
+                  CLOSE
+               </button>
+               <h1>{name}</h1>
+               <div className="imageContainer">
+                  <Image
+                     src={process.env.NEXT_PUBLIC_API + item.attributes.image.data.attributes.url}
+                     alt={name}
+                     layout="fill"
+                  />
+               </div>
+               <div className="textContainer">
+                  <p>
+                     {isRoom ? room.attributes.description : product.attributes.description_small}
+                  </p>
+               </div>
+               <Link href={isRoom ? 'rooms/' + name.toLowerCase() : 'shop/' + name.toLowerCase()}>
+                  <CommonButton type="primary">GO TO PRODUCT</CommonButton>
+               </Link>
             </div>
-            <div className="textContainer">
-               <p>{isRoom ? room.attributes.description : product.attributes.description_small}</p>
-            </div>
-            <Link href={isRoom ? 'rooms/' + name.toLowerCase() : 'shop/' + name.toLowerCase()}>
-               <CommonButton type="primary">GO TO PRODUCT</CommonButton>
-            </Link>
          </Container>
       )
    );

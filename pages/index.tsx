@@ -38,11 +38,20 @@ const Container = styled.div`
             w-1/3 aspect-ratio[1/1] 
             z-10
          `}
+
+         ${tw`
+            md:( w-1/4 )
+         `}
+
+         ${tw`
+            xl:( w-1/5 )
+         `}
       }
    }
 
    .title {
       ${tw`
+         grid
          mix-blend-screen
          relative z-20
       `}
@@ -52,11 +61,17 @@ const Container = styled.div`
             mb-6
             text-8xl
          `}
+
+         ${tw`
+            md:( 
+               text-9xl 
+             )
+         `}
       }
 
       a {
          ${tw`
-            flex justify-center
+            justify-self-center
          `}
       }
    }
@@ -75,7 +90,7 @@ const Index = ({ data }: Props) => {
             },
             {
                y: '-100%',
-               duration: () => mapRange(Math.random(), 0, 1, 8, 40),
+               duration: () => mapRange(Math.random(), 0, 1, 6, 30),
                ease: 'none',
                repeat: -1,
             }

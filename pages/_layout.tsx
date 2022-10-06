@@ -26,6 +26,8 @@ const Layout = ({ children, inHome = false, footerLess = false }: Layout) => {
       changeVisibility(value);
 
       if (value === 'open') {
+         gsap.to('#cartVeil', { duration: 0.2, display: 'block', opacity: 0.4 });
+
          gsap.fromTo(
             '.cart',
             {
@@ -43,6 +45,14 @@ const Layout = ({ children, inHome = false, footerLess = false }: Layout) => {
                gsap.to('.cart', { display: 'none' });
             },
          });
+
+         gsap.to('#cartVeil', {
+            duration: 0.2,
+            opacity: 0,
+            onComplete: () => {
+               gsap.to('#cartVeil', { display: 'none' });
+            },
+         });
       }
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -56,7 +66,7 @@ const Layout = ({ children, inHome = false, footerLess = false }: Layout) => {
    }, []);
 
    return (
-      <div ref={container} tw="relative" className={visibility}>
+      <div ref={container} tw="relative overflow-x-hidden" className={visibility}>
          <Cart closeHandler={toggleCart} />
          <Header changeVisibility={changeVisibility} inHome={inHome} cartHandler={toggleCart} />
          {children}

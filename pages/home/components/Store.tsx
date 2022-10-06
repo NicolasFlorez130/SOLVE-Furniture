@@ -14,6 +14,14 @@ const Container = styled.div`
       mt-8
    `}
 
+   ${tw`
+      md:( w-3/4 )
+   `}
+
+   ${tw`
+      lg:( w-full )
+   `}
+
    .imageContainer {
       aspect-ratio: 1/1;
 

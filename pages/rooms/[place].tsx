@@ -9,26 +9,35 @@ import { HEADERS } from '../../utils/globals';
 import { Room as Room_T, Rooms } from '../../types/rooms_api_response';
 import Room from '../home/components/Room';
 import Layout from '../_layout';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { setScrollSmooth } from '../../hooks/ScrollSmooth';
 import { TransitionScreen } from '../_transitionScreen';
+import { Scrollbar } from 'smooth-scrollbar/interfaces';
 
 interface Props {
    room: Room_T;
    nextRoom: Room_T;
 }
 const Place = ({ room, nextRoom }: Props) => {
+   const scrollWrapper = useRef<Scrollbar>();
+
    useEffect(() => {
-      setScrollSmooth('#roomWrapper', '', 'x');
+      scrollWrapper.current = setScrollSmooth('#roomWrapper', '', 'x');
    }, []);
+
+   useEffect(() => {
+      scrollWrapper.current?.setPosition(0, 0);
+   }, [room]);
 
    return (
       <TransitionScreen>
          <div id="roomWrapper" tw="h-screen">
             <Layout>
-               <Section className="top">
-                  <h1 tw="mt-16 text-7xl">{room.attributes.place.toUpperCase()}</h1>
-                  <p tw="my-4">{room.attributes.description}</p>
+               <Section className="top" tw="md:(flex gap-6 items-end)">
+                  <div>
+                     <h1 tw="mt-16 text-7xl md:( text-9xl )">{room.attributes.place}</h1>
+                     <p tw="my-4">{room.attributes.description}</p>
+                  </div>
                   <Link href="/rooms">
                      <a>
                         <ButtonText arrowPos="after">ROOMS</ButtonText>
@@ -44,19 +53,19 @@ const Place = ({ room, nextRoom }: Props) => {
                      priority
                   />
                </div>
-               <Section className="highlight">
-                  <h2 tw="text-4xl">{room.attributes.details.label}</h2>
+               <Section className="highlight" tw="lg:( grid grid-cols-2 )">
+                  <h2 tw="text-4xl md:( text-6xl ) lg:( ml-8 )">{room.attributes.details.label}</h2>
                   <div>
                      {room.attributes.details.text.split('_').map((par, i) => (
-                        <p key={i} tw="mt-8">
+                        <p key={i} tw="mt-8 lg:( mt-0 mb-8 )">
                            {par}
                         </p>
                      ))}
                   </div>
                </Section>
                <div tw="mb-14" className="next">
-                  <h3 tw="mb-4 text-7xl text-center">NEXT</h3>
-                  <div tw="m-auto w-3/4">
+                  <h3 tw="mb-4 text-7xl text-center md:(text-9xl translate-y-1/2)">NEXT</h3>
+                  <div tw="m-auto w-3/4 md:(w-2/3) lg:(w-1/2) xl:( w-1/3 )">
                      <Room room={nextRoom} />
                   </div>
                </div>

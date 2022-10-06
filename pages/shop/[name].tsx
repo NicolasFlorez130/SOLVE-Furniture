@@ -1,6 +1,9 @@
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
+import { Scrollbar } from 'smooth-scrollbar/interfaces';
 import tw from 'twin.macro';
 import CommonButton from '../../components/CommonButton';
 import Product from '../../components/Product';
@@ -32,7 +35,12 @@ const SubTitle = tw.h2`
 const Name = ({ product, relatedProducts }: Props) => {
    const cartDispatch = useTypedDispatch();
 
+   const wrapper = useRef<HTMLDivElement>(null);
    const Input = useRef<HTMLInputElement>(null);
+   const desc = useRef<HTMLDivElement>(null);
+   const image = useRef<HTMLDivElement>(null);
+
+   const wrapperScroll = useRef<Scrollbar>();
 
    const addProduct = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       e.preventDefault();
@@ -51,62 +59,103 @@ const Name = ({ product, relatedProducts }: Props) => {
    descriptionLi.shift();
 
    useEffect(() => {
-      setScrollSmooth('#productWrapper', '', 'x');
+      const descHeight = window.getComputedStyle(desc.current as Element).height;
+      const imageHeight = window.getComputedStyle(image.current as Element).height;
+      const yMov =
+         parseFloat(imageHeight.replace('px', '')) - parseFloat(descHeight.replace('px', ''));
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      wrapperScroll.current = setScrollSmooth('#productWrapper', '', 'x');
+
+      const descAnimation = gsap.to(desc.current, {
+         y: yMov,
+         ease: 'none',
+         scrollTrigger: {
+            scrub: 2,
+            trigger: desc.current,
+            start: 'top top',
+            end: `${imageHeight} bottom`,
+            scroller: '#productWrapper',
+         },
+      });
+
+      return () => {
+         descAnimation.kill();
+      };
    }, []);
+
+   useEffect(() => {
+      wrapperScroll.current?.setPosition(0, 0);
+   }, [product]);
 
    return (
       <TransitionScreen>
-         <div id="productWrapper" tw="h-screen">
+         <div ref={wrapper} id="productWrapper" tw="h-screen">
             <Layout>
-               <Section tw="pt-28">
-                  <h1 tw="text-5xl">{product.attributes.name}</h1>
-                  <p tw="font-medium my-4">{UsdFormatter.format(product.attributes.price)} USD</p>
-                  <p>{product.attributes.description_small}</p>
-                  <form tw="flex flex-col my-8">
-                     <input
-                        ref={Input}
-                        tw="border border-texts mb-6 py-4 px-8 rounded-full"
-                        type="number"
-                        defaultValue={1}
-                        step={1}
+               <div className="top" tw="relative lg:( grid grid-cols-2 )">
+                  <Section
+                     as="article"
+                     ref={desc}
+                     tw="relative pt-28 lg:( order-2 top-0 sticky h-[min-content] )">
+                     <h1 tw="text-5xl md:( text-7xl ) xl:( text-8xl )">
+                        {product.attributes.name}
+                     </h1>
+                     <p tw="font-medium my-4">
+                        {UsdFormatter.format(product.attributes.price)} USD
+                     </p>
+                     <p>{product.attributes.description_small}</p>
+                     <form tw="flex flex-col my-8 md:( flex-row gap-4 w-full )">
+                        <input
+                           ref={Input}
+                           tw="border border-texts mb-6 py-4 px-8 rounded-full md:( mb-0 px-0 text-center w-20 )"
+                           type="number"
+                           defaultValue={1}
+                           step={1}
+                        />
+                        <CommonButton onClick={addProduct} type="primary">
+                           ADD TO CART
+                        </CommonButton>
+                     </form>
+                     <ul
+                        className="border-y-[.1px]"
+                        tw="items-center border-texts border-opacity-30 flex gap-4 px-2 py-6">
+                        <li>DETAILS</li>
+                        <li>DELIVERY</li>
+                        <li>RETURNS</li>
+                     </ul>
+                  </Section>
+                  <div ref={image} className="aspect-[2/3]" tw="relative w-full">
+                     <Image
+                        src={
+                           process.env.NEXT_PUBLIC_API +
+                           product.attributes.image.data.attributes.url
+                        }
+                        alt={product.attributes.name}
+                        layout="fill"
+                        objectFit="contain"
+                        priority
                      />
-                     <CommonButton onClick={addProduct} type="primary">
-                        ADD TO CART
-                     </CommonButton>
-                  </form>
-                  <ul
-                     className="border-y-[.1px]"
-                     tw="items-center border-texts border-opacity-30 flex gap-4 px-2 py-6">
-                     <li>DETAILS</li>
-                     <li>DELIVERY</li>
-                     <li>RETURNS</li>
-                  </ul>
-               </Section>
-               <div className="imageContainer aspect-[2/3]" tw="relative w-full">
-                  <Image
-                     src={
-                        process.env.NEXT_PUBLIC_API + product.attributes.image.data.attributes.url
-                     }
-                     alt={product.attributes.name}
-                     layout="fill"
-                     objectFit="contain"
-                     priority
-                  />
+                  </div>
                </div>
-               <Section>
-                  <SubTitle>{product.attributes.description_detailed.label}</SubTitle>
-                  <p>{descriptionParagraph}</p>
-                  <ul>
-                     {descriptionLi?.map((li, i) => (
-                        <li key={i} tw="mt-4 text-[1.2rem]">
-                           <ArrowSvg /> {li}
-                        </li>
-                     ))}
-                  </ul>
+               <Section tw="lg:( grid grid-cols-2 )">
+                  <SubTitle tw="md:( text-5xl )">
+                     {product.attributes.description_detailed.label}
+                  </SubTitle>
+                  <div>
+                     <p>{descriptionParagraph}</p>
+                     <ul>
+                        {descriptionLi?.map((li, i) => (
+                           <li key={i} tw="mt-4 text-[1.2rem]">
+                              <ArrowSvg /> {li}
+                           </li>
+                        ))}
+                     </ul>
+                  </div>
                </Section>
                <Section className="border-y" tw="border-texts border-opacity-30">
-                  <SubTitle>Related products</SubTitle>
-                  <div tw="grid grid-cols-2 gap-8">
+                  <SubTitle tw="md:( text-5xl text-center )">Related products</SubTitle>
+                  <div tw="grid grid-cols-2 gap-8 md:(grid-cols-3)">
                      {relatedProducts.map(prod => (
                         <Product key={prod.id} product={prod} />
                      ))}

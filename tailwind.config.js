@@ -17,6 +17,9 @@ module.exports = {
             'texts': '#343339',
             'titles': '#FFF',
             'background': '#EDEDED'
+         },
+         screens: {
+            'xs': '520px'
          }
       }
    },

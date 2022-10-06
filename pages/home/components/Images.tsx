@@ -16,6 +16,8 @@ interface Props {
 const Images_S = styled.section<BgProps>`
    ${tw`
       bg-blend-multiply bg-cover bg-center bg-texts bg-opacity-10
+      grid
+      h-screen
       relative
    `}
 
@@ -27,6 +29,18 @@ const Images_S = styled.section<BgProps>`
          w-1/2 aspect-ratio[1/1] 
          z-0
       `}
+
+      ${tw`
+         xs:(
+            w-1/3
+         )
+      `}
+
+      ${tw`
+         lg:(
+            w-1/4
+         )
+      `}
    }
 
    ${({ bgHref }) => {
@@ -34,12 +48,13 @@ const Images_S = styled.section<BgProps>`
    }}
 `;
 
-const Title = tw.h2`
-   py-[50vh]
-   max-h-screen 
-   relative 
-   text-titles text-center text-8xl
-   z-10
+const Title = styled.h2`
+   ${tw`
+      align-self[center]
+      relative 
+      text-titles text-center !text-8xl
+      z-10
+   `}
 `;
 
 const Images = ({ children, bgHref, bubbles }: Props) => {
@@ -50,7 +65,7 @@ const Images = ({ children, bgHref, bubbles }: Props) => {
          '.bubble',
          {
             scale: 0.5,
-            xPercent: () => Math.random() * 100,
+            x: () => `${Math.random() * 70}vw`,
             y: '100vh',
          },
          {

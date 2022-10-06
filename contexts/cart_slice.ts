@@ -1,9 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Product } from '../types/products_api_response';
+import { cartKey } from '../utils/keys';
 
 export interface CartState {
    products: Product[];
 }
+
+const persistenceCart = (products: CartState['products']) => {
+   localStorage.setItem(cartKey, JSON.stringify(products));
+};
 
 interface AddAction {
    payload: Product[];
@@ -19,10 +24,12 @@ const cartSlice = createSlice({
    reducers: {
       add: (state, { payload }: AddAction) => {
          payload.forEach(product => state.products.push(product));
+         persistenceCart(state.products);
       },
       reset: state => (state = initialState),
       update: (state, { payload }: { payload: Product[] }) => {
          state.products = payload;
+         persistenceCart(state.products);
       },
    },
 });

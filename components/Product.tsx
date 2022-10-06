@@ -29,7 +29,7 @@ const ImageContainer = styled.div`
 const Product = ({ product }: Props) => {
    return (
       <Link href={'/shop/' + product.attributes.name.toLocaleLowerCase()}>
-         <div tw="cursor-pointer w-full">
+         <div className="product" tw="cursor-pointer w-full">
             <ImageContainer className="aspect-[2/3]">
                <Image
                   alt={product.attributes.name}
@@ -38,12 +38,14 @@ const Product = ({ product }: Props) => {
                   tw="object-contain"
                />
             </ImageContainer>
-            <h3 tw="font-cabinet font-medium text-xl text-center pt-4">
-               {product.attributes.name}
-            </h3>
-            <p tw="text-base font-medium text-center">
-               {UsdFormatter.format(product.attributes.price)} USD
-            </p>
+            <div>
+               <h3 tw="font-cabinet font-medium text-xl text-center pt-4">
+                  {product.attributes.name}
+               </h3>
+               <p tw="text-base font-medium text-center">
+                  {UsdFormatter.format(product.attributes.price)} USD
+               </p>
+            </div>
          </div>
       </Link>
    );

@@ -8,13 +8,13 @@ import tw from 'twin.macro';
 import CommonButton from '../../components/CommonButton';
 import Product from '../../components/Product';
 import { Section } from '../../components/styledComponents';
+import Layout from '../../components/_layout';
+import { TransitionScreen } from '../../components/_transitionScreen';
 import { add } from '../../contexts/cart_slice';
 import { useTypedDispatch, useTypedSelector } from '../../hooks/redux';
 import { setScrollSmooth } from '../../hooks/ScrollSmooth';
 import { Product as Product_T, Products } from '../../types/products_api_response';
 import { UsdFormatter } from '../../utils/formatters';
-import Layout from '../_layout';
-import { TransitionScreen } from '../_transitionScreen';
 
 interface Props {
    product: Product_T;

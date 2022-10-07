@@ -49,23 +49,24 @@ const Container = styled.div`
 `;
 
 const ItemCard = ({ item, pos, openFunc }: Props) => {
-   const isRoom = (item as Product).attributes.name ? false : true;
+   const isRoom = (item as Product)?.attributes.name ? false : true;
    const room = item as Room;
    const product = item as Product;
 
-   const name = isRoom ? room.attributes.place : product.attributes.name;
-   const route = (isRoom ? '/rooms/' : '/shop/') + name.toLowerCase();
+   const name = isRoom ? room?.attributes.place : product?.attributes.name;
 
    return (
-      <Container className={'item-' + pos} onClick={() => openFunc(item)}>
-         <h3>VIEW</h3>
-         <Image
-            src={process.env.NEXT_PUBLIC_API + item.attributes.image.data.attributes.url}
-            alt={name + ' image'}
-            layout="fill"
-            objectFit="cover"
-         />
-      </Container>
+      item && (
+         <Container className={'item-' + pos} onClick={() => openFunc(item)}>
+            <h3>VIEW</h3>
+            <Image
+               src={process.env.NEXT_PUBLIC_API + item.attributes.image.data.attributes.url}
+               alt={name + ' image'}
+               layout="fill"
+               objectFit="cover"
+            />
+         </Container>
+      )
    );
 };
 

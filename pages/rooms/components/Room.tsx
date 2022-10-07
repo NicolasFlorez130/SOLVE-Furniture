@@ -33,14 +33,16 @@ const Container = styled.div<ContainerProps>`
 
 const Room = ({ room }: Props) => {
    return (
-      <Container bgUrl={room.attributes.image.data.attributes.url}>
-         <h2>{room.attributes.place}</h2>
-         <Link href={'rooms/' + room.attributes.place.toLowerCase()}>
-            <a>
-               <CommonButton type="inverse">EXPLORE</CommonButton>
-            </a>
-         </Link>
-      </Container>
+      room && (
+         <Container bgUrl={room.attributes.image.data.attributes.url}>
+            <h2>{room.attributes.place}</h2>
+            <Link href={'rooms/' + room.attributes.place.toLowerCase()}>
+               <a>
+                  <CommonButton type="inverse">EXPLORE</CommonButton>
+               </a>
+            </Link>
+         </Container>
+      )
    );
 };
 

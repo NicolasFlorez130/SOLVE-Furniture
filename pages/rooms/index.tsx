@@ -2,9 +2,9 @@ import { GetStaticProps } from 'next';
 import tw from 'twin.macro';
 import { HEADERS } from '../../utils/globals';
 import { Room as Room_T } from '../../types/rooms_api_response';
-import Layout from '../_layout';
+import Layout from '../../components/_layout';
 import Room from './components/Room';
-import { TransitionScreen } from '../_transitionScreen';
+import { TransitionScreen } from '../../components/_transitionScreen';
 
 interface Props {
    rooms: Room_T[];

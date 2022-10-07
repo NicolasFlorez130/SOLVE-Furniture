@@ -82,6 +82,4 @@ const _transitionScreen = ({ children }: Props) => {
    );
 };
 
-const Svg = () => <></>;
-
 export { _transitionScreen as TransitionScreen };

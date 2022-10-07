@@ -48,25 +48,27 @@ const Container = styled.div`
 
 const Store = ({ store }: Props) => {
    return (
-      <Container>
-         <div className="imageContainer">
-            <Image
-               alt={store.attributes.city + ' store'}
-               src={process.env.NEXT_PUBLIC_API + store.attributes.media.data.attributes.url}
-               layout="fill"
-               tw="object-cover"
-            />
-         </div>
-         <div className="dataContainer">
-            <h3>{store.attributes.city.toLocaleLowerCase()}</h3>
-            <p>
-               SØLVE Store,
-               <br />
-               {store.attributes.location}
-            </p>
-            <ButtonText arrowPos="after">GET DIRECTIONS</ButtonText>
-         </div>
-      </Container>
+      store && (
+         <Container>
+            <div className="imageContainer">
+               <Image
+                  alt={store.attributes.city + ' store'}
+                  src={process.env.NEXT_PUBLIC_API + store.attributes.media.data.attributes.url}
+                  layout="fill"
+                  tw="object-cover"
+               />
+            </div>
+            <div className="dataContainer">
+               <h3>{store.attributes.city.toLocaleLowerCase()}</h3>
+               <p>
+                  SØLVE Store,
+                  <br />
+                  {store.attributes.location}
+               </p>
+               <ButtonText arrowPos="after">GET DIRECTIONS</ButtonText>
+            </div>
+         </Container>
+      )
    );
 };
 

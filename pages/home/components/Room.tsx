@@ -42,11 +42,13 @@ const Circle = styled.div<CircleProps>`
 
 const Room = ({ room }: Props) => {
    return (
-      <Link href={'/rooms/' + room.attributes.place.toLocaleLowerCase()}>
-         <Circle bgImage={room.attributes.image.data.attributes.url}>
-            <h3>{room.attributes.place.toUpperCase()}</h3>
-         </Circle>
-      </Link>
+      room && (
+         <Link href={'/rooms/' + room.attributes.place.toLocaleLowerCase()}>
+            <Circle bgImage={room.attributes.image.data.attributes.url}>
+               <h3>{room.attributes.place.toUpperCase()}</h3>
+            </Circle>
+         </Link>
+      )
    );
 };
 

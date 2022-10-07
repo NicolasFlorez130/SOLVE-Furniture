@@ -1,8 +1,8 @@
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from './Header';
+import Footer from './Footer';
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import tw from 'twin.macro';
-import Cart from '../components/Cart';
+import Cart from './Cart';
 import gsap from 'gsap';
 import { useRouter } from 'next/router';
 

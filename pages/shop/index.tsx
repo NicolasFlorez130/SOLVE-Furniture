@@ -1,5 +1,5 @@
 import tw from 'twin.macro';
-import Layout from '../_layout';
+import Layout from '../../components/_layout';
 import { GetStaticProps } from 'next';
 import { HEADERS } from '../../utils/globals';
 import { Category } from '../../types/categories_api_responses';
@@ -10,7 +10,7 @@ import Product from '../../components/Product';
 import Help from '../../components/Help';
 import { useEffect, useRef, useState } from 'react';
 import { setScrollSmooth } from '../../hooks/ScrollSmooth';
-import { TransitionScreen } from '../_transitionScreen';
+import { TransitionScreen } from '../../components/_transitionScreen';
 
 interface Props {
    categories: Category[];
@@ -50,7 +50,7 @@ const Index = ({ categories, products }: Props) => {
                     product.attributes.category.data.attributes.name.toLowerCase() ===
                     category.toLowerCase()
               );
-              
+
       setProducts(newVal);
    };
 

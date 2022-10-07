@@ -201,12 +201,12 @@ const Header = ({ inHome, changeVisibility, cartHandler }: Props) => {
       <div ref={container} tw="absolute overflow-hidden w-full z-20">
          <Header_S inHome={inHome}>
             <Link href="/lookbook">
-               <a tw="hidden md:( block )">LOOKBOOK</a>
+               <div tw="hidden md:( block )">LOOKBOOK</div>
             </Link>
             <Link href="/home">
-               <a tw="md:( justify-self-center )">
+               <div tw="md:( justify-self-center )">
                   <Label size={4}>SØLVE</Label>
-               </a>
+               </div>
             </Link>
             <ul tw="flex gap-2 items-center justify-self-end md:( gap-6 )">
                <li>
@@ -240,10 +240,14 @@ const Header = ({ inHome, changeVisibility, cartHandler }: Props) => {
                         <h2>SOLVE</h2>
                      </li>
                      <li>
-                        <Link href="/home">HOME</Link>
+                        <Link href="/home">
+                           HOME
+                        </Link>
                      </li>
                      <li>
-                        <Link href="/rooms">ROOMS</Link>
+                        <Link href="/rooms">
+                           ROOMS
+                        </Link>
                      </li>
                   </ul>
                   <ul>

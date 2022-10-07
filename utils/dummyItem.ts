@@ -74,4 +74,4 @@ const dummy = {
    },
 };
 
-export default dummy;
+export { dummy };

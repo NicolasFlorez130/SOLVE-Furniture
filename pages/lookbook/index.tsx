@@ -7,11 +7,11 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 import { Product as Product_T } from '../../types/products_api_response';
 import { Room } from '../../types/rooms_api_response';
-import Layout from '../_layout';
-import { TransitionScreen } from '../_transitionScreen';
+import Layout from '../../components/_layout';
+import { TransitionScreen } from '../../components/_transitionScreen';
 import Product from './components/ItemCard';
 import ItemDetailed from './components/ItemDetailed';
-import dummy from './utils/dummyItem';
+import { dummy } from '../../utils/dummyItem';
 
 interface Props {
    items: Product_T[];

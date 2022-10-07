@@ -94,8 +94,8 @@ const ItemDetailed = ({ item, closeFunc }: Props) => {
    const room = item as Room;
    const product = item as Product;
 
-   const isRoom = (item as Product).attributes.name ? false : true;
-   const name = isRoom ? room?.attributes.place : product.attributes.name;
+   const isRoom = (item as Product)?.attributes.name ? false : true;
+   const name = isRoom ? room?.attributes.place : product?.attributes.name;
 
    return (
       item && (

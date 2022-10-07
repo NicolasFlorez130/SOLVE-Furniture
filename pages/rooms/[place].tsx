@@ -8,10 +8,10 @@ import { Section } from '../../components/styledComponents';
 import { HEADERS } from '../../utils/globals';
 import { Room as Room_T, Rooms } from '../../types/rooms_api_response';
 import Room from '../home/components/Room';
-import Layout from '../_layout';
+import Layout from '../../components/_layout';
 import { useEffect, useRef } from 'react';
 import { setScrollSmooth } from '../../hooks/ScrollSmooth';
-import { TransitionScreen } from '../_transitionScreen';
+import { TransitionScreen } from '../../components/_transitionScreen';
 import { Scrollbar } from 'smooth-scrollbar/interfaces';
 
 interface Props {

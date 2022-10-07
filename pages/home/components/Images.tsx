@@ -1,7 +1,5 @@
-import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
 import Image from 'next/image';
-import { useEffect, useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import { BgProps } from '..';
@@ -58,57 +56,23 @@ const Title = styled.h2`
 `;
 
 const Images = ({ children, bgHref, bubbles }: Props) => {
-   useEffect(() => {
-      gsap.registerPlugin(ScrollTrigger);
-
-      const movement = gsap.fromTo(
-         '.bubble',
-         {
-            scale: 0.5,
-            x: () => `${Math.random() * 70}vw`,
-            y: '100vh',
-         },
-         {
-            duration: 0.5,
-            ease: 'none',
-            scale: () => 1 + Math.random() * 0.7,
-            stagger: 0.15,
-            y: '-170%',
-         }
-      );
-
-      ScrollTrigger.create({
-         animation: movement,
-         end: `${bubbles.length * 300}vh end`,
-         pin: true,
-         scroller: '#homeWrapper',
-         scrub: true,
-         start: 'top top',
-         trigger: '#imagesWrapper',
-      });
-
-      return () => {
-         movement.kill();
-      };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, []);
-
    return (
       <Images_S id="imagesWrapper" bgHref={bgHref}>
          <Title>{children}</Title>
-         {bubbles.map(bubble => {
-            return (
-               <div className="bubble" key={bubble.id}>
-                  <Image
-                     loading="eager"
-                     alt="bubble image"
-                     src={process.env.NEXT_PUBLIC_API + bubble.attributes.url}
-                     layout="fill"
-                     objectFit="cover"
-                  />
-               </div>
-            );
-         })}
+         {bubbles &&
+            bubbles.map(bubble => {
+               return (
+                  <div className="bubble" key={bubble.id}>
+                     <Image
+                        loading="eager"
+                        alt="bubble image"
+                        src={process.env.NEXT_PUBLIC_API + bubble.attributes.url}
+                        layout="fill"
+                        objectFit="cover"
+                     />
+                  </div>
+               );
+            })}
       </Images_S>
    );
 };

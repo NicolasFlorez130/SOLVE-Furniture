@@ -8,7 +8,7 @@ import tw from 'twin.macro';
 import ButtonCircle from '../components/ButtonCircle';
 import { Welcome } from '../types/welcome_api_response';
 import { mapRange } from '../utils/maths';
-import { TransitionScreen } from './_transitionScreen';
+import { TransitionScreen } from '../components/_transitionScreen';
 
 interface Props {
    data: Welcome;

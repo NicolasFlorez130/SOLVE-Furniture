@@ -43,7 +43,7 @@ const Index = ({ categories, products }: Props) => {
    }, []);
 
    const changeCategory = (category: string) => {
-      const selector = '#shopWrapper .product:not(.header .product)';
+      const selector = '#shopWrapper .productWrapper:not(.header .product)';
 
       const productsState = Flip.getState(selector);
       const containerState = Flip.getState('#productsContainer');

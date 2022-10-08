@@ -19,7 +19,7 @@ const _transitionScreen = ({ children }: Props) => {
    };
 
    useEffect(() => {
-      function closeVeil() {
+      function lowerVeil(animate: boolean) {
          gsap
             .timeline()
             .to(svg.current, {
@@ -37,14 +37,20 @@ const _transitionScreen = ({ children }: Props) => {
             });
       }
 
-      function openVeil() {
+      function raiseVeil() {
          gsap
-            .timeline({ delay: 0.8 })
-            .to(path.current, {
-               duration: 0.2,
-               attr: { d: initialPaths.second },
-               ease: 'power3.in',
-            })
+            .timeline({})
+            .fromTo(
+               path.current,
+               {
+                  attr: { d: initialPaths.third },
+               },
+               {
+                  duration: 0.2,
+                  attr: { d: initialPaths.second },
+                  ease: 'power3.in',
+               }
+            )
             .to(path.current, {
                duration: 0.5,
                attr: { d: initialPaths.first },
@@ -55,16 +61,14 @@ const _transitionScreen = ({ children }: Props) => {
             });
       }
 
-      openVeil();
-
-      router.events.on('routeChangeStart', closeVeil);
-      router.events.on('routeChangeComplete', openVeil);
+      raiseVeil();
+      // router.events.on('routeChangeStart', lowerVeil);
+      router.events.on('routeChangeComplete', raiseVeil);
 
       return () => {
-         router.events.off('routeChangeStart', closeVeil);
-         router.events.off('routeChangeComplete', openVeil);
+         // router.events.off('routeChangeStart', lowerVeil);
+         router.events.off('routeChangeComplete', raiseVeil);
       };
-
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
    return (

@@ -198,15 +198,17 @@ const Header = ({ inHome, changeVisibility, cartHandler }: Props) => {
    }, []);
 
    return (
-      <div ref={container} tw="absolute overflow-hidden w-full z-20">
+      <div className="header" ref={container} tw="absolute overflow-hidden w-full z-20">
          <Header_S inHome={inHome}>
             <Link href="/lookbook">
-               <div tw="hidden md:( block )">LOOKBOOK</div>
+               <a className="w-min">
+                  <div tw="hidden md:( block )">LOOKBOOK</div>
+               </a>
             </Link>
             <Link href="/home">
-               <div tw="md:( justify-self-center )">
+               <a className="md:justify-self-center">
                   <Label size={4}>SØLVE</Label>
-               </div>
+               </a>
             </Link>
             <ul tw="flex gap-2 items-center justify-self-end md:( gap-6 )">
                <li>
@@ -240,14 +242,10 @@ const Header = ({ inHome, changeVisibility, cartHandler }: Props) => {
                         <h2>SOLVE</h2>
                      </li>
                      <li>
-                        <Link href="/home">
-                           HOME
-                        </Link>
+                        <Link href="/home">HOME</Link>
                      </li>
                      <li>
-                        <Link href="/rooms">
-                           ROOMS
-                        </Link>
+                        <Link href="/rooms">ROOMS</Link>
                      </li>
                   </ul>
                   <ul>

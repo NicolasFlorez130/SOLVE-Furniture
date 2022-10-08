@@ -11,13 +11,13 @@ import { HomeContent } from '../../types/home_api_responses';
 import { Product as Product_T } from '../../types/products_api_response';
 import { Room as Room_T } from '../../types/rooms_api_response';
 import { Store as Store_T } from '../../types/stores_api_response';
-import Layout from '../../components/_layout';
+import Layout from '../../components/Layout';
 import Images from './components/Images';
 import Room from './components/Room';
 import Store from './components/Store';
 import { useEffect, useRef } from 'react';
 import { setScrollSmooth } from '../../hooks/ScrollSmooth';
-import { TransitionScreen } from '../../components/_transitionScreen';
+import { TransitionScreen } from '../../components/TransitionScreen';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 

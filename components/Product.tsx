@@ -29,24 +29,30 @@ const ImageContainer = styled.div`
 const Product = ({ product }: Props) => {
    return (
       <Link href={'/shop/' + product.attributes.name.toLocaleLowerCase()}>
-         <div className="product" tw="cursor-pointer w-full">
-            <ImageContainer className="aspect-[2/3]">
-               <Image
-                  alt={product.attributes.name}
-                  src={process.env.NEXT_PUBLIC_API + product.attributes.image.data.attributes.url}
-                  layout="fill"
-                  tw="object-contain"
-               />
-            </ImageContainer>
-            <div>
-               <h3 tw="font-cabinet font-medium text-xl text-center pt-4">
-                  {product.attributes.name}
-               </h3>
-               <p tw="text-base font-medium text-center">
-                  {UsdFormatter.format(product.attributes.price)} USD
-               </p>
+         <a
+            data-category={product.attributes.category.data.attributes.name}
+            className="product | w-full">
+            <div tw="cursor-pointer">
+               <ImageContainer className="aspect-[2/3]">
+                  <Image
+                     alt={product.attributes.name}
+                     src={
+                        process.env.NEXT_PUBLIC_API + product.attributes.image.data.attributes.url
+                     }
+                     layout="fill"
+                     tw="object-contain"
+                  />
+               </ImageContainer>
+               <div>
+                  <h3 tw="font-cabinet font-medium text-xl text-center pt-4">
+                     {product.attributes.name}
+                  </h3>
+                  <p tw="text-base font-medium text-center">
+                     {UsdFormatter.format(product.attributes.price)} USD
+                  </p>
+               </div>
             </div>
-         </div>
+         </a>
       </Link>
    );
 };

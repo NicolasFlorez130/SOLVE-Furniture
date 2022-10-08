@@ -8,8 +8,8 @@ import tw from 'twin.macro';
 import CommonButton from '../../components/CommonButton';
 import Product from '../../components/Product';
 import { Section } from '../../components/styledComponents';
-import Layout from '../../components/_layout';
-import { TransitionScreen } from '../../components/_transitionScreen';
+import Layout from '../../components/Layout';
+import { TransitionScreen } from '../../components/TransitionScreen';
 import { add } from '../../contexts/cart_slice';
 import { useTypedDispatch, useTypedSelector } from '../../hooks/redux';
 import { setScrollSmooth } from '../../hooks/ScrollSmooth';
@@ -68,22 +68,26 @@ const Name = ({ product, relatedProducts }: Props) => {
 
       wrapperScroll.current = setScrollSmooth('#productWrapper', '', 'x');
 
-      const descAnimation = gsap.to(desc.current, {
-         y: yMov,
-         ease: 'none',
-         scrollTrigger: {
-            scrub: 2,
-            trigger: desc.current,
-            start: 'top top',
-            end: `${imageHeight} bottom`,
-            scroller: '#productWrapper',
-         },
-      });
+      const descAnimation = gsap.fromTo(
+         desc.current,
+         { y: 0 },
+         {
+            y: yMov,
+            ease: 'none',
+            scrollTrigger: {
+               scrub: 2,
+               trigger: desc.current,
+               start: 'top top',
+               end: `${imageHeight} bottom`,
+               scroller: '#productWrapper',
+            },
+         }
+      );
 
       return () => {
          descAnimation.kill();
       };
-   }, []);
+   });
 
    useEffect(() => {
       wrapperScroll.current?.setPosition(0, 0);

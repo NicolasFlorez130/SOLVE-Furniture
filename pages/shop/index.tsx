@@ -1,5 +1,5 @@
 import tw from 'twin.macro';
-import Layout from '../../components/_layout';
+import Layout from '../../components/Layout';
 import { GetStaticProps } from 'next';
 import { HEADERS } from '../../utils/globals';
 import { Category } from '../../types/categories_api_responses';
@@ -10,7 +10,9 @@ import Product from '../../components/Product';
 import Help from '../../components/Help';
 import { useEffect, useRef, useState } from 'react';
 import { setScrollSmooth } from '../../hooks/ScrollSmooth';
-import { TransitionScreen } from '../../components/_transitionScreen';
+import { TransitionScreen } from '../../components/TransitionScreen';
+import Flip from 'gsap/Flip';
+import gsap from 'gsap';
 
 interface Props {
    categories: Category[];
@@ -33,25 +35,41 @@ const NavList = styled.nav`
 `;
 
 const Index = ({ categories, products }: Props) => {
-   const [shownProducts, setProducts] = useState(products);
-
-   const allProducts = useRef<Product_T[]>(products);
-
    useEffect(() => {
+      gsap.registerPlugin(Flip);
+
       setScrollSmooth('#shopWrapper', '', 'x');
    }, []);
 
    const changeCategory = (category: string) => {
-      const newVal =
-         category === 'all'
-            ? allProducts.current
-            : allProducts.current.filter(
-                 product =>
-                    product.attributes.category.data.attributes.name.toLowerCase() ===
-                    category.toLowerCase()
-              );
+      const selector = '#shopWrapper .product:not(.header .product)';
 
-      setProducts(newVal);
+      const productsState = Flip.getState(selector);
+      const containerState = Flip.getState('#productsContainer');
+
+      const prods = document.querySelectorAll(selector) as NodeListOf<HTMLElement>;
+
+      prods.forEach(product => {
+         product.classList.remove('hidden');
+         category.toLowerCase() === 'all' ||
+            (product.dataset.category?.toLowerCase() != category.toLowerCase() &&
+               product.classList.add('hidden'));
+      });
+
+      Flip.from(containerState, { duration: 0.2 });
+
+      Flip.from(productsState, {
+         duration: 0.2,
+         absolute: true,
+         onEnter: el =>
+            gsap.fromTo(el, { opacity: 0, scale: 0.5 }, { duration: 0.2, opacity: 1, scale: 1 }),
+         onLeave: el =>
+            gsap.fromTo(
+               el,
+               { width: `${productsState.elementStates.at(0)?.bounds.width}px` },
+               { duration: 0.2, opacity: 0, scale: 0.5 }
+            ),
+      });
    };
 
    return (
@@ -61,6 +79,9 @@ const Index = ({ categories, products }: Props) => {
                <h1 tw="text-8xl text-center pb-14 pt-28">SHOP</h1>
                <NavList className="border-y">
                   <ul>
+                     <li>
+                        <button onClick={() => changeCategory('all')}>ALL</button>
+                     </li>
                      {categories.map(category => {
                         return (
                            <li key={category.id}>
@@ -70,13 +91,12 @@ const Index = ({ categories, products }: Props) => {
                            </li>
                         );
                      })}
-                     <li>
-                        <button onClick={() => changeCategory('all')}>ALL</button>
-                     </li>
                   </ul>
                </NavList>
-               <Section tw="grid grid-cols-2 gap-8 justify-items-center md:( grid-cols-3 )">
-                  {shownProducts.map(product => (
+               <Section
+                  id="productsContainer"
+                  tw="grid grid-cols-2 gap-8 justify-items-center relative md:( grid-cols-3 gap-14 )">
+                  {products.map(product => (
                      <Product product={product} key={product.id} />
                   ))}
                </Section>

@@ -12,6 +12,7 @@ import { TransitionScreen } from '../../components/TransitionScreen';
 import Product from './components/ItemCard';
 import ItemDetailed from './components/ItemDetailed';
 import { dummy } from '../../utils/dummyItem';
+import Head from 'next/head';
 
 interface Props {
    items: Product_T[];
@@ -91,24 +92,38 @@ const Index = ({ items }: Props) => {
       });
    };
 
+   const PageHead = () => (
+      <Head>
+         <base href="/" />
+         <title>Products lookbook</title>
+         <meta name="description" content="Here you can see all SØLVE products." key="desc" />
+         <meta property="og:title" content="SØLVE Lookbook" />
+         <meta property="og:description" content="Here you can see all SØLVE products." />
+         <meta property="og:image" content="/thumbnail.webp" />
+      </Head>
+   );
+
    return (
-      <TransitionScreen>
-         <Layout footerLess>
-            <div tw="grid">
-               <div id="productsWrapper" tw="h-screen overflow-hidden w-screen">
-                  <Container id="cardsContainer">
-                     {[...items, ...items].map((item, i) => {
-                        itemCount = itemCount >= 6 ? 1 : itemCount + 1;
-                        return (
-                           <Product item={item} key={i} pos={itemCount} openFunc={openDetails} />
-                        );
-                     })}
-                  </Container>
+      <>
+         <PageHead />
+         <TransitionScreen>
+            <Layout footerLess>
+               <div tw="grid">
+                  <div id="productsWrapper" tw="h-screen overflow-hidden w-screen">
+                     <Container id="cardsContainer">
+                        {[...items, ...items].map((item, i) => {
+                           itemCount = itemCount >= 6 ? 1 : itemCount + 1;
+                           return (
+                              <Product item={item} key={i} pos={itemCount} openFunc={openDetails} />
+                           );
+                        })}
+                     </Container>
+                  </div>
+                  <ItemDetailed item={item} closeFunc={closeDetails} />
                </div>
-               <ItemDetailed item={item} closeFunc={closeDetails} />
-            </div>
-         </Layout>
-      </TransitionScreen>
+            </Layout>
+         </TransitionScreen>
+      </>
    );
 };
 

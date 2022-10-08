@@ -13,6 +13,7 @@ import { setScrollSmooth } from '../../hooks/ScrollSmooth';
 import { TransitionScreen } from '../../components/TransitionScreen';
 import Flip from 'gsap/Flip';
 import gsap from 'gsap';
+import Head from 'next/head';
 
 interface Props {
    categories: Category[];
@@ -72,38 +73,56 @@ const Index = ({ categories, products }: Props) => {
       });
    };
 
+   const PageHead = () => (
+      <Head>
+         <base href="/" />
+         <title>Products shop</title>
+         <meta
+            name="description"
+            content="Come to see all the products SØLVE have to you."
+            key="desc"
+         />
+         <meta property="og:title" content="SØLVE Shop" />
+         <meta property="og:description" content="Here you can see all SØLVE products." />
+         <meta property="og:image" content="/thumbnail.webp" />
+      </Head>
+   );
+
    return (
-      <TransitionScreen>
-         <div id="shopWrapper" tw="h-screen">
-            <Layout>
-               <h1 tw="text-8xl text-center pb-14 pt-28">SHOP</h1>
-               <NavList className="border-y">
-                  <ul>
-                     <li>
-                        <button onClick={() => changeCategory('all')}>ALL</button>
-                     </li>
-                     {categories.map(category => {
-                        return (
-                           <li key={category.id}>
-                              <button onClick={() => changeCategory(category.attributes.name)}>
-                                 {category.attributes.name}
-                              </button>
-                           </li>
-                        );
-                     })}
-                  </ul>
-               </NavList>
-               <Section
-                  id="productsContainer"
-                  tw="grid grid-cols-2 gap-8 justify-items-center relative md:( grid-cols-3 gap-14 )">
-                  {products.map(product => (
-                     <Product product={product} key={product.id} />
-                  ))}
-               </Section>
-               <Help />
-            </Layout>
-         </div>
-      </TransitionScreen>
+      <>
+         <PageHead />
+         <TransitionScreen>
+            <div id="shopWrapper" tw="h-screen">
+               <Layout>
+                  <h1 tw="text-8xl text-center pb-14 pt-28">SHOP</h1>
+                  <NavList className="border-y">
+                     <ul>
+                        <li>
+                           <button onClick={() => changeCategory('all')}>ALL</button>
+                        </li>
+                        {categories.map(category => {
+                           return (
+                              <li key={category.id}>
+                                 <button onClick={() => changeCategory(category.attributes.name)}>
+                                    {category.attributes.name}
+                                 </button>
+                              </li>
+                           );
+                        })}
+                     </ul>
+                  </NavList>
+                  <Section
+                     id="productsContainer"
+                     tw="grid grid-cols-2 gap-8 justify-items-center relative md:( grid-cols-3 gap-14 )">
+                     {products.map(product => (
+                        <Product product={product} key={product.id} />
+                     ))}
+                  </Section>
+                  <Help />
+               </Layout>
+            </div>
+         </TransitionScreen>
+      </>
    );
 };
 

@@ -19,27 +19,27 @@ const _transitionScreen = ({ children }: Props) => {
    };
 
    useEffect(() => {
-      function lowerVeil(animate: boolean) {
-         gsap
-            .timeline()
-            .to(svg.current, {
-               display: 'block',
-            })
-            .to(path.current, {
-               duration: 0.1,
-               attr: { d: initialPaths.second },
-               ease: 'power3.in',
-            })
-            .to(path.current, {
-               duration: 0.25,
-               attr: { d: initialPaths.third },
-               ease: 'power2.out',
-            });
-      }
+      // function lowerVeil(animate: boolean) {
+      //    gsap
+      //       .timeline()
+      //       .to(svg.current, {
+      //          display: 'block',
+      //       })
+      //       .to(path.current, {
+      //          duration: 0.1,
+      //          attr: { d: initialPaths.second },
+      //          ease: 'power3.in',
+      //       })
+      //       .to(path.current, {
+      //          duration: 0.25,
+      //          attr: { d: initialPaths.third },
+      //          ease: 'power2.out',
+      //       });
+      // }
 
       function raiseVeil() {
          gsap
-            .timeline({})
+            .timeline({ delay: 0.5 })
             .fromTo(
                path.current,
                {

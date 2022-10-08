@@ -29,10 +29,8 @@ const ImageContainer = styled.div`
 const Product = ({ product }: Props) => {
    return (
       <Link href={'/shop/' + product.attributes.name.toLocaleLowerCase()}>
-         <a
-            data-category={product.attributes.category.data.attributes.name}
-            className="product | w-full">
-            <div tw="cursor-pointer">
+         <a data-category={product.attributes.category.data.attributes.name} className="w-full">
+            <div className="product" tw="cursor-pointer">
                <ImageContainer className="aspect-[2/3]">
                   <Image
                      alt={product.attributes.name}
@@ -43,7 +41,7 @@ const Product = ({ product }: Props) => {
                      tw="object-contain"
                   />
                </ImageContainer>
-               <div>
+               <div className='dataContainer'>
                   <h3 tw="font-cabinet font-medium text-xl text-center pt-4">
                      {product.attributes.name}
                   </h3>

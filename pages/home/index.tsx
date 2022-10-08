@@ -1,25 +1,27 @@
+import gsap from 'gsap';
+import { mapRange } from 'gsap/all';
+import ScrollTrigger from 'gsap/ScrollTrigger';
 import { GetStaticProps } from 'next';
+import Head from 'next/head';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import ButtonText from '../../components/ButtonText';
 import CommonButton from '../../components/CommonButton';
+import Layout from '../../components/Layout';
 import Product from '../../components/Product';
 import { Section } from '../../components/styledComponents';
-import { HEADERS } from '../../utils/globals';
+import { TransitionScreen } from '../../components/TransitionScreen';
+import { setScrollSmooth } from '../../hooks/ScrollSmooth';
 import { HomeContent } from '../../types/home_api_responses';
 import { Product as Product_T } from '../../types/products_api_response';
 import { Room as Room_T } from '../../types/rooms_api_response';
 import { Store as Store_T } from '../../types/stores_api_response';
-import Layout from '../../components/Layout';
+import { HEADERS } from '../../utils/globals';
 import Images from './components/Images';
 import Room from './components/Room';
 import Store from './components/Store';
-import { useEffect, useRef } from 'react';
-import { setScrollSmooth } from '../../hooks/ScrollSmooth';
-import { TransitionScreen } from '../../components/TransitionScreen';
-import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
 
 interface Props {
    content: HomeContent;
@@ -115,24 +117,31 @@ const Container = styled.div`
 const Home = ({ content, products, rooms, stores }: Props) => {
    useEffect(() => {
       setScrollSmooth('#homeWrapper', '', 'x');
-   }, []);
 
-   useEffect(() => {
       gsap.registerPlugin(ScrollTrigger);
 
-      const movement = gsap.fromTo(
+      const titleAppear = gsap.from('#homeWrapper h1', {
+         delay: 0.8,
+         duration: 0.4,
+         opacity: 0,
+         yPercent: 10,
+         scrollTrigger: {
+            trigger: '#homeWrapper h1',
+            scroller: '#homeWrapper',
+         },
+      });
+
+      const bubblesMovement = gsap.fromTo(
          '.bubble',
          {
-            scale: 0.5,
             x: () => `${Math.random() * 70}vw`,
             y: '100vh',
          },
          {
-            duration: 0.5,
             ease: 'none',
-            scale: () => 1 + Math.random() * 0.7,
-            stagger: 0.15,
-            y: '-170%',
+            scale: () => mapRange(0, 1, 0.2, 0.5, Math.random()),
+            stagger: 0.1,
+            y: '-100%',
             scrollTrigger: {
                trigger: '#imagesWrapper',
                scroller: '#homeWrapper',
@@ -145,86 +154,111 @@ const Home = ({ content, products, rooms, stores }: Props) => {
       );
 
       return () => {
-         movement.kill();
+         titleAppear.revert();
+         bubblesMovement.revert();
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
 
+   const PageHead = () => (
+      <Head>
+         <base href="/" />
+         <title>Home</title>
+         <meta
+            name="description"
+            content="SØLVE is a furniture store with quite style."
+            key="desc"
+         />
+         <meta property="og:title" content="SØLVE Furniture" />
+         <meta property="og:description" content="SØLVE is a furniture store with quite style." />
+         <meta property="og:image" content="/thumbnail.webp" />
+      </Head>
+   );
+
    return (
-      <TransitionScreen>
-         <div id="homeWrapper" tw="h-screen">
-            <Container>
-               <Layout inHome>
-                  <Hero
-                     bgHref={process.env.NEXT_PUBLIC_API + content.background.data.attributes.url}>
-                     <h1>{content.title}</h1>
-                     <Link href="/shop">
-                        <a>
-                           <CommonButton type="inverse">SHOP NOW</CommonButton>
-                        </a>
-                     </Link>
-                  </Hero>
-                  <Section className="featured" tw="border-b border-texts border-opacity-20">
-                     <h2 tw="mb-12 text-center">Featured</h2>
-                     <div tw="grid grid-cols-2 gap-8 md:( grid-cols-3 )">
-                        {products.map(product =>
-                           product.attributes.featured ? (
-                              <Product key={product.id} product={product} />
-                           ) : null
-                        )}
-                     </div>
-                  </Section>
-                  <Section className="highlight" tw="lg:( grid grid-cols-2 )">
-                     <h3 tw="mb-10 text-5xl lg:( text-7xl mr-20 )">Lorem ipsum</h3>
-                     <div>
+      <>
+         <PageHead />
+         <TransitionScreen>
+            <div id="homeWrapper" tw="h-screen">
+               <Container>
+                  <Layout inHome>
+                     <Hero
+                        bgHref={
+                           process.env.NEXT_PUBLIC_API + content.background.data.attributes.url
+                        }>
+                        <h1>{content.title}</h1>
+                        <Link href="/shop">
+                           <a>
+                              <CommonButton type="inverse">SHOP NOW</CommonButton>
+                           </a>
+                        </Link>
+                     </Hero>
+                     <Section className="featured" tw="border-b border-texts border-opacity-20">
+                        <h2 tw="mb-12 text-center">Featured</h2>
+                        <div tw="grid grid-cols-2 gap-8 md:( grid-cols-3 )">
+                           {products.map(
+                              product =>
+                                 product.attributes.featured && (
+                                    <Product key={product.id} product={product} />
+                                 )
+                           )}
+                        </div>
+                     </Section>
+                     <Section className="highlight" tw="lg:( grid grid-cols-2 )">
+                        <h3 tw="mb-10 text-5xl lg:( text-7xl mr-20 )">Lorem ipsum</h3>
                         <div>
-                           {content.highlight.text.split('_').map((p, i) => {
-                              return (
-                                 <p tw="mb-10" key={i}>
-                                    {p}
-                                 </p>
-                              );
+                           <div>
+                              {content.highlight.text.split('_').map((p, i) => {
+                                 return (
+                                    <p tw="mb-10" key={i}>
+                                       {p}
+                                    </p>
+                                 );
+                              })}
+                              <Link href="/shop">
+                                 <a>
+                                    <CommonButton type="default">SHOP NOW</CommonButton>
+                                 </a>
+                              </Link>
+                           </div>
+                        </div>
+                     </Section>
+                     <Images
+                        bgHref={
+                           process.env.NEXT_PUBLIC_API +
+                           content.bubblesBackground.data.attributes.url
+                        }
+                        bubbles={content.bubble.data}>
+                        {content.bubblesTitle}
+                     </Images>
+                     <Section className="rooms">
+                        <h2 tw="text-center">Rooms</h2>
+                        <Link href="rooms">
+                           <div tw="flex justify-center my-6">
+                              <ButtonText arrowPos="after">SEE ALL</ButtonText>
+                           </div>
+                        </Link>
+                        <div className="roomsContainer">
+                           {rooms.map((room, i) => {
+                              return i < 3 ? <Room key={room.id} room={room} /> : null;
                            })}
-                           <Link href="/shop">
-                              <a>
-                                 <CommonButton type="default">SHOP NOW</CommonButton>
-                              </a>
-                           </Link>
                         </div>
-                     </div>
-                  </Section>
-                  <Images
-                     bgHref={
-                        process.env.NEXT_PUBLIC_API + content.bubblesBackground.data.attributes.url
-                     }
-                     bubbles={content.bubble.data}>
-                     {content.bubblesTitle}
-                  </Images>
-                  <Section className="rooms">
-                     <h2 tw="text-center">Rooms</h2>
-                     <Link href="rooms">
-                        <div tw="flex justify-center my-6">
-                           <ButtonText arrowPos="after">SEE ALL</ButtonText>
+                     </Section>
+                     <Section
+                        className="stores"
+                        tw="border-texts border-opacity-20 border-t border-b">
+                        <h2>Our Stores</h2>
+                        <div tw=" lg:( grid grid-cols-2 ) ">
+                           {stores.map(store => {
+                              return <Store key={store.id} store={store} />;
+                           })}
                         </div>
-                     </Link>
-                     <div className="roomsContainer">
-                        {rooms.map((room, i) => {
-                           return i < 3 ? <Room key={room.id} room={room} /> : null;
-                        })}
-                     </div>
-                  </Section>
-                  <Section className="stores" tw="border-texts border-opacity-20 border-t border-b">
-                     <h2>Our Stores</h2>
-                     <div tw=" lg:( grid grid-cols-2 ) ">
-                        {stores.map(store => {
-                           return <Store key={store.id} store={store} />;
-                        })}
-                     </div>
-                  </Section>
-               </Layout>
-            </Container>
-         </div>
-      </TransitionScreen>
+                     </Section>
+                  </Layout>
+               </Container>
+            </div>
+         </TransitionScreen>
+      </>
    );
 };
 

@@ -9,6 +9,7 @@ import ButtonCircle from '../components/ButtonCircle';
 import { Welcome } from '../types/welcome_api_response';
 import { mapRange } from '../utils/maths';
 import { TransitionScreen } from '../components/TransitionScreen';
+import Head from 'next/head';
 
 interface Props {
    data: Welcome;
@@ -102,32 +103,50 @@ const Index = ({ data }: Props) => {
       // };
    }, []);
 
+   const PageHead = () => (
+      <Head>
+         <base href="/" />
+         <title>SØLVE</title>
+         <meta
+            name="description"
+            content="SØLVE is a furniture store with quite style."
+            key="desc"
+         />
+         <meta property="og:title" content="SØLVE Furniture" />
+         <meta property="og:description" content="SØLVE is a furniture store with quite style." />
+         <meta property="og:image" content="/thumbnail.webp" />
+      </Head>
+   );
+
    return (
-      <TransitionScreen>
-         <Container>
-            <div className="title">
-               <h1>{data.attributes.title}</h1>
-               <Link href="/home">
-                  <a>
-                     <ButtonCircle>ENTER</ButtonCircle>
-                  </a>
-               </Link>
-            </div>
-            <div className="images">
-               {data.attributes.buble.data.map(bubble => (
-                  <div className="bubble" key={bubble.id}>
-                     <Image
-                        loading="eager"
-                        alt={bubble.attributes.name + ' image'}
-                        src={process.env.NEXT_PUBLIC_API + bubble.attributes.url}
-                        layout="fill"
-                        objectFit="cover"
-                     />
-                  </div>
-               ))}
-            </div>
-         </Container>
-      </TransitionScreen>
+      <>
+         <PageHead />
+         <TransitionScreen>
+            <Container>
+               <div className="title">
+                  <h1>{data.attributes.title}</h1>
+                  <Link href="/home">
+                     <a>
+                        <ButtonCircle>ENTER</ButtonCircle>
+                     </a>
+                  </Link>
+               </div>
+               <div className="images">
+                  {data.attributes.buble.data.map(bubble => (
+                     <div className="bubble" key={bubble.id}>
+                        <Image
+                           loading="eager"
+                           alt={bubble.attributes.name + ' image'}
+                           src={process.env.NEXT_PUBLIC_API + bubble.attributes.url}
+                           layout="fill"
+                           objectFit="cover"
+                        />
+                     </div>
+                  ))}
+               </div>
+            </Container>
+         </TransitionScreen>
+      </>
    );
 };
 

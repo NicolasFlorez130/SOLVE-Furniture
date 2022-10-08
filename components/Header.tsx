@@ -86,19 +86,26 @@ const Menu = styled.div`
 
          .product {
             ${tw`
-               grid grid-cols-[60% 40%]
+               grid grid-cols-[50% 50%]
             `};
 
             h3,
             p {
                ${tw`
-                  ml-2
+                  ml-3
                   text-left text-lg font-normal
+               `}
+            }
+
+            h3 {
+               ${tw`
+                  mt-4
                `}
             }
 
             p {
                ${tw`
+                  mt-2
                   text-sm
                `}
             }
@@ -201,8 +208,8 @@ const Header = ({ inHome, changeVisibility, cartHandler }: Props) => {
       <div className="header" ref={container} tw="absolute overflow-hidden w-full z-20">
          <Header_S inHome={inHome}>
             <Link href="/lookbook">
-               <a className="w-min">
-                  <div tw="hidden md:( block )">LOOKBOOK</div>
+               <a className="hidden w-min md:block">
+                  <div>LOOKBOOK</div>
                </a>
             </Link>
             <Link href="/home">
@@ -261,7 +268,9 @@ const Header = ({ inHome, changeVisibility, cartHandler }: Props) => {
                   </ul>
                   <div className="featured">
                      {featured.map(
-                        feat => feat.attributes.featured && <Product key={feat.id} product={feat} />
+                        (feat, i) =>
+                           i <= 3 &&
+                           feat.attributes.featured && <Product key={feat.id} product={feat} />
                      )}
                   </div>
                </Section>

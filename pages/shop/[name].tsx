@@ -15,6 +15,7 @@ import { useTypedDispatch, useTypedSelector } from '../../hooks/redux';
 import { setScrollSmooth } from '../../hooks/ScrollSmooth';
 import { Product as Product_T, Products } from '../../types/products_api_response';
 import { UsdFormatter } from '../../utils/formatters';
+import Head from 'next/head';
 
 interface Props {
    product: Product_T;
@@ -93,81 +94,95 @@ const Name = ({ product, relatedProducts }: Props) => {
       wrapperScroll.current?.setPosition(0, 0);
    }, [product]);
 
+   const PageHead = () => (
+      <Head>
+         <base href="/" />
+         <title>{product.attributes.name}</title>
+         <meta name="description" content={product.attributes.description_small} key="desc" />
+         <meta property="og:title" content={product.attributes.name} />
+         <meta property="og:description" content={product.attributes.description_small} />
+         <meta property="og:image" content="/thumbnail.webp" />
+      </Head>
+   );
+
    return (
-      <TransitionScreen>
-         <div ref={wrapper} id="productWrapper" tw="h-screen">
-            <Layout>
-               <div className="top" tw="relative lg:( grid grid-cols-2 )">
-                  <Section
-                     as="article"
-                     ref={desc}
-                     tw="relative pt-28 lg:( order-2 top-0 sticky h-[min-content] )">
-                     <h1 tw="text-5xl md:( text-7xl ) xl:( text-8xl )">
-                        {product.attributes.name}
-                     </h1>
-                     <p tw="font-medium my-4">
-                        {UsdFormatter.format(product.attributes.price)} USD
-                     </p>
-                     <p>{product.attributes.description_small}</p>
-                     <form tw="flex flex-col my-8 md:( flex-row gap-4 w-full )">
-                        <input
-                           ref={Input}
-                           tw="border border-texts mb-6 py-4 px-8 rounded-full md:( mb-0 px-0 text-center w-20 )"
-                           type="number"
-                           defaultValue={1}
-                           step={1}
+      <>
+         <PageHead />
+         <TransitionScreen>
+            <div ref={wrapper} id="productWrapper" tw="h-screen">
+               <Layout>
+                  <div className="top" tw="relative lg:( grid grid-cols-2 )">
+                     <Section
+                        as="article"
+                        ref={desc}
+                        tw="relative pt-28 lg:( order-2 top-0 sticky h-[min-content] )">
+                        <h1 tw="text-5xl md:( text-7xl w-1/2 ) xl:( text-8xl )">
+                           {product.attributes.name}
+                        </h1>
+                        <p tw="font-medium my-4">
+                           {UsdFormatter.format(product.attributes.price)} USD
+                        </p>
+                        <p>{product.attributes.description_small}</p>
+                        <form tw="flex flex-col my-8 md:( flex-row gap-4 w-full )">
+                           <input
+                              ref={Input}
+                              tw="border border-texts mb-6 py-4 px-8 rounded-full md:( mb-0 px-0 text-center w-20 )"
+                              type="number"
+                              defaultValue={1}
+                              step={1}
+                           />
+                           <CommonButton onClick={addProduct} type="primary">
+                              ADD TO CART
+                           </CommonButton>
+                        </form>
+                        <ul
+                           className="border-y-[.1px]"
+                           tw="items-center border-texts border-opacity-30 flex gap-4 px-2 py-6">
+                           <li>DETAILS</li>
+                           <li>DELIVERY</li>
+                           <li>RETURNS</li>
+                        </ul>
+                     </Section>
+                     <div ref={image} className="aspect-[2/3]" tw="relative w-full">
+                        <Image
+                           src={
+                              process.env.NEXT_PUBLIC_API +
+                              product.attributes.image.data.attributes.url
+                           }
+                           alt={product.attributes.name}
+                           layout="fill"
+                           objectFit="contain"
+                           priority
                         />
-                        <CommonButton onClick={addProduct} type="primary">
-                           ADD TO CART
-                        </CommonButton>
-                     </form>
-                     <ul
-                        className="border-y-[.1px]"
-                        tw="items-center border-texts border-opacity-30 flex gap-4 px-2 py-6">
-                        <li>DETAILS</li>
-                        <li>DELIVERY</li>
-                        <li>RETURNS</li>
-                     </ul>
+                     </div>
+                  </div>
+                  <Section tw="lg:( grid grid-cols-2 )">
+                     <SubTitle tw="md:( text-5xl )">
+                        {product.attributes.description_detailed.label}
+                     </SubTitle>
+                     <div>
+                        <p>{descriptionParagraph}</p>
+                        <ul>
+                           {descriptionLi?.map((li, i) => (
+                              <li key={i} tw="mt-4 text-[1.2rem]">
+                                 <ArrowSvg /> {li}
+                              </li>
+                           ))}
+                        </ul>
+                     </div>
                   </Section>
-                  <div ref={image} className="aspect-[2/3]" tw="relative w-full">
-                     <Image
-                        src={
-                           process.env.NEXT_PUBLIC_API +
-                           product.attributes.image.data.attributes.url
-                        }
-                        alt={product.attributes.name}
-                        layout="fill"
-                        objectFit="contain"
-                        priority
-                     />
-                  </div>
-               </div>
-               <Section tw="lg:( grid grid-cols-2 )">
-                  <SubTitle tw="md:( text-5xl )">
-                     {product.attributes.description_detailed.label}
-                  </SubTitle>
-                  <div>
-                     <p>{descriptionParagraph}</p>
-                     <ul>
-                        {descriptionLi?.map((li, i) => (
-                           <li key={i} tw="mt-4 text-[1.2rem]">
-                              <ArrowSvg /> {li}
-                           </li>
+                  <Section className="border-y" tw="border-texts border-opacity-30">
+                     <SubTitle tw="md:( text-5xl text-center )">Related products</SubTitle>
+                     <div tw="grid grid-cols-2 gap-8 md:(grid-cols-3)">
+                        {relatedProducts.map(prod => (
+                           <Product key={prod.id} product={prod} />
                         ))}
-                     </ul>
-                  </div>
-               </Section>
-               <Section className="border-y" tw="border-texts border-opacity-30">
-                  <SubTitle tw="md:( text-5xl text-center )">Related products</SubTitle>
-                  <div tw="grid grid-cols-2 gap-8 md:(grid-cols-3)">
-                     {relatedProducts.map(prod => (
-                        <Product key={prod.id} product={prod} />
-                     ))}
-                  </div>
-               </Section>
-            </Layout>
-         </div>
-      </TransitionScreen>
+                     </div>
+                  </Section>
+               </Layout>
+            </div>
+         </TransitionScreen>
+      </>
    );
 };
 

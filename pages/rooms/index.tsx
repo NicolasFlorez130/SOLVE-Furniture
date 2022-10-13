@@ -35,7 +35,7 @@ const Index = ({ rooms }: Props) => {
          <PageHead />
          <TransitionScreen>
             <Layout inHome={true} footerLess={true}>
-               <div id="roomsWrapper" tw="h-screen overflow-scroll">
+               <div id="roomsWrapper" tw="h-screen overflow-x-scroll overflow-y-hidden">
                   <div tw="flex">
                      {rooms.map(room => {
                         return <Room key={room.id} room={room} />;

@@ -45,7 +45,7 @@ const Place = ({ room, nextRoom }: Props) => {
       <>
          <PageHead />
          <TransitionScreen>
-            <div id="roomWrapper" tw="h-screen">
+            <div id="roomWrapper" tw="h-full">
                <Layout>
                   <Section className="top" tw="md:(flex gap-6 items-end)">
                      <div>

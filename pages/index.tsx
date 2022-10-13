@@ -41,11 +41,11 @@ const Container = styled.div`
          `}
 
          ${tw`
-            md:( w-1/4 )
+            md:( w-1/6 )
          `}
 
          ${tw`
-            xl:( w-1/5 )
+            xl:( w-1/12 )
          `}
       }
    }
@@ -91,7 +91,7 @@ const Index = ({ data }: Props) => {
             },
             {
                y: '-100%',
-               duration: () => mapRange(Math.random(), 0, 1, 6, 30),
+               duration: () => mapRange(Math.random(), 0, 1, 10, 30),
                ease: 'none',
                repeat: -1,
             }

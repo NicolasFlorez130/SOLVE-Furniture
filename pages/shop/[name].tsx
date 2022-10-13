@@ -69,24 +69,32 @@ const Name = ({ product, relatedProducts }: Props) => {
 
       wrapperScroll.current = setScrollSmooth('#productWrapper', '', 'x');
 
-      const descAnimation = gsap.fromTo(
-         desc.current,
-         { y: 0 },
-         {
-            y: yMov,
-            ease: 'none',
-            scrollTrigger: {
-               scrub: 2,
-               trigger: desc.current,
-               start: 'top top',
-               end: `${imageHeight} bottom`,
-               scroller: '#productWrapper',
-            },
-         }
-      );
+      let descAnimation: any;
+
+      const mm = gsap.matchMedia();
+
+      mm.add('(width >= 1024px)', () => {
+         descAnimation = gsap.fromTo(
+            desc.current,
+            { y: 0 },
+            {
+               y: yMov,
+               ease: 'none',
+               scrollTrigger: {
+                  scrub: 2,
+                  trigger: desc.current,
+                  start: 'top top',
+                  end: `${imageHeight} bottom`,
+                  scroller: '#productWrapper',
+               },
+            }
+         );
+      });
 
       return () => {
-         descAnimation.kill();
+         mm.add('(width >= 1024px)', () => {
+            descAnimation.kill();
+         });
       };
    });
 

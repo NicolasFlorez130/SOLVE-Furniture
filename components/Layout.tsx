@@ -69,7 +69,7 @@ const Layout = ({ children, inHome = false, footerLess = false }: Layout) => {
       <div ref={container} tw="relative overflow-x-hidden" className={visibility}>
          <Cart closeHandler={toggleCart} />
          <Header changeVisibility={changeVisibility} inHome={inHome} cartHandler={toggleCart} />
-         {children}
+         <main>{children}</main>
          {!footerLess && <Footer />}
       </div>
    );

@@ -140,7 +140,7 @@ const Home = ({ content, products, rooms, stores }: Props) => {
          {
             ease: 'none',
             scale: () => mapRange(0, 1, 0.2, 0.5, Math.random()),
-            stagger: 0.1,
+            stagger: 0.08,
             y: '-100%',
             scrollTrigger: {
                trigger: '#imagesWrapper',

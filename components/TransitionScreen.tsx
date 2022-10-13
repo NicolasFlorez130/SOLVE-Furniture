@@ -2,6 +2,7 @@ import gsap from 'gsap';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
 import tw from 'twin.macro';
+import { alert } from '../utils/keys';
 
 interface Props {
    children: any;
@@ -61,12 +62,14 @@ const _transitionScreen = ({ children }: Props) => {
             });
       }
 
-      raiseVeil();
+      !localStorage.getItem(alert) ? window.addEventListener('load', raiseVeil) : raiseVeil();
+      // window.onload =  raiseVeil();
       // router.events.on('routeChangeStart', lowerVeil);
       router.events.on('routeChangeComplete', raiseVeil);
 
       return () => {
          // router.events.off('routeChangeStart', lowerVeil);
+         // window.removeEventListener('load', raiseVeil);
          router.events.off('routeChangeComplete', raiseVeil);
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps

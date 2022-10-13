@@ -36,7 +36,7 @@ const Images_S = styled.section<BgProps>`
 
       ${tw`
          lg:(
-            w-1/5
+            w-1/6
          )
       `}
    }

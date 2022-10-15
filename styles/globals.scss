@@ -38,4 +38,14 @@ html {
    @media all and (min-width: 2560px) {
       font-size: 24px;
    }
+
+   * {
+
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+         display: none;
+      }
+   }
 }

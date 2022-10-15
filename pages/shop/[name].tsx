@@ -60,11 +60,6 @@ const Name = ({ product, relatedProducts }: Props) => {
    descriptionLi.shift();
 
    useEffect(() => {
-      const descHeight = window.getComputedStyle(desc.current as Element).height;
-      const imageHeight = window.getComputedStyle(image.current as Element).height;
-      const yMov =
-         parseFloat(imageHeight.replace('px', '')) - parseFloat(descHeight.replace('px', ''));
-
       gsap.registerPlugin(ScrollTrigger);
 
       wrapperScroll.current = setScrollSmooth('#productWrapper', '', 'x');
@@ -73,28 +68,47 @@ const Name = ({ product, relatedProducts }: Props) => {
 
       const mm = gsap.matchMedia();
 
-      mm.add('(width >= 1024px)', () => {
-         descAnimation = gsap.fromTo(
-            desc.current,
-            { y: 0 },
-            {
-               y: yMov,
-               ease: 'none',
-               scrollTrigger: {
-                  scrub: 2,
-                  trigger: desc.current,
-                  start: 'top top',
-                  end: `${imageHeight} bottom`,
-                  scroller: '#productWrapper',
-               },
-            }
-         );
-      });
+      const setAnimation = () => {
+         const descHeight = window.getComputedStyle(desc.current as Element).height;
+         const imageHeight = window.getComputedStyle(image.current as Element).height;
+         const yMov =
+            parseFloat(imageHeight.replace('px', '')) - parseFloat(descHeight.replace('px', ''));
+
+         mm.add('(width >= 1024px)', () => {
+            descAnimation = gsap.fromTo(
+               desc.current,
+               { y: 0 },
+               {
+                  y: yMov,
+                  ease: 'none',
+                  scrollTrigger: {
+                     scrub: 2,
+                     trigger: desc.current,
+                     start: 'top top',
+                     end: `${imageHeight} bottom`,
+                     scroller: '#productWrapper',
+                  },
+               }
+            );
+         });
+      };
+
+      const revertAnimation = () => {
+         mm.add('(width >= 1024px)', () => {
+            descAnimation.revert();
+         });
+      };
+      setAnimation();
+
+      window.onresize = () => {
+         revertAnimation();
+         setAnimation();
+      };
 
       return () => {
-         mm.add('(width >= 1024px)', () => {
-            descAnimation.kill();
-         });
+         window.onresize = null;
+
+         revertAnimation();
       };
    });
 

@@ -15,5 +15,3 @@ const nextConfig = {
 const withTM = require('next-transpile-modules')(['gsap', 'smooth-scrollbar'])
 
 module.exports = withTM(nextConfig)
-
-// module.exports = nextConfig

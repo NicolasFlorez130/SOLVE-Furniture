@@ -15,12 +15,12 @@ html {
 
    input::-webkit-outer-spin-button,
    input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
+      appearance: none;
       margin: 0;
    }
 
    input[type=number] {
-      -moz-appearance: textfield;
+      appearance: textfield;
    }
 
    @media all and (min-width: 360px) {
@@ -37,5 +37,15 @@ html {
 
    @media all and (min-width: 2560px) {
       font-size: 24px;
+   }
+
+   * {
+
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+         display: none;
+      }
    }
 }

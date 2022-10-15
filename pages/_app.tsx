@@ -9,23 +9,15 @@ import { alert } from '../utils/keys';
 
 function MyApp({ Component, pageProps }: AppProps) {
    useEffect(() => {
-      const reload = () => {
-         location.reload();
-      };
-      window.addEventListener('resize', reload);
 
       const alertShown = localStorage.getItem(alert);
 
       if (!alertShown) {
          window.alert(
-            'IMPORTANT: Since this is just a demonstration page, its headless CMD is allocated in a serverless heroku service, therefore, if have passed many time since the last user visited the page, it may take a certain long time to load the resources for first time. Sorry for the inconvenience.'
+            'IMPORTANT: Since this is just a demonstration page, its headless CMS is allocated in a serverless heroku service, therefore, if have passed many time since the last user visited the page, it may take a certain long time to load the resources for first time. Sorry for the inconvenience.'
          );
          localStorage.setItem(alert, 'shown');
       }
-
-      return () => {
-         window.removeEventListener('resize', reload);
-      };
    }, []);
 
    return (

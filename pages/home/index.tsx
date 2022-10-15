@@ -36,7 +36,7 @@ export interface BgProps {
 
 const Hero = styled.section<BgProps>`
    ${tw`
-      bg-cover
+      bg-cover bg-center
       flex flex-col items-center justify-center gap-8
       px-5 py-36
       text-titles
@@ -131,29 +131,42 @@ const Home = ({ content, products, rooms, stores }: Props) => {
          },
       });
 
-      const bubblesMovement = gsap.fromTo(
-         '.bubble',
-         {
-            x: () => `${Math.random() * 70}vw`,
-            y: '100vh',
-         },
-         {
-            ease: 'none',
-            scale: () => mapRange(0, 1, 0.2, 0.5, Math.random()),
-            stagger: 0.08,
-            y: '-100%',
-            scrollTrigger: {
-               trigger: '#imagesWrapper',
-               scroller: '#homeWrapper',
-               scrub: true,
-               pin: true,
-               start: 'top top',
-               end: `${content.bubble.data.length * 300}vh end`,
+      let bubblesMovement: any;
+
+      const setAnimation = () => {
+         bubblesMovement = gsap.fromTo(
+            '.bubble',
+            {
+               x: () => `${Math.random() * 70}vw`,
+               y: '100vh',
             },
-         }
-      );
+            {
+               ease: 'none',
+               scale: () => mapRange(0, 1, 0.2, 0.5, Math.random()),
+               stagger: 0.08,
+               y: '-100%',
+               scrollTrigger: {
+                  trigger: '#imagesWrapper',
+                  scroller: '#homeWrapper',
+                  scrub: true,
+                  pin: true,
+                  start: 'top top',
+                  end: `${content.bubble.data.length * 300}vh end`,
+               },
+            }
+         );
+      };
+
+      setAnimation();
+
+      window.onresize = () => {
+         bubblesMovement.revert();
+         setAnimation();
+      };
 
       return () => {
+         window.onresize = null;
+
          titleAppear.revert();
          bubblesMovement.revert();
       };

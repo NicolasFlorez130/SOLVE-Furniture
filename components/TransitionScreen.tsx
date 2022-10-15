@@ -38,8 +38,10 @@ const _transitionScreen = ({ children }: Props) => {
       //       });
       // }
 
-      function raiseVeil() {
-         gsap
+      let animation: any;
+
+      const raiseVeil = () => {
+         animation = gsap
             .timeline({ delay: 0.5 })
             .fromTo(
                path.current,
@@ -60,18 +62,17 @@ const _transitionScreen = ({ children }: Props) => {
             .to(svg.current, {
                display: 'none',
             });
-      }
+      };
 
-      !localStorage.getItem(alert) ? window.addEventListener('load', raiseVeil) : raiseVeil();
-      // window.onload =  raiseVeil();
-      // router.events.on('routeChangeStart', lowerVeil);
+      raiseVeil();
+
       router.events.on('routeChangeComplete', raiseVeil);
 
       return () => {
-         // router.events.off('routeChangeStart', lowerVeil);
-         // window.removeEventListener('load', raiseVeil);
          router.events.off('routeChangeComplete', raiseVeil);
+         animation.revert();
       };
+
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
    return (

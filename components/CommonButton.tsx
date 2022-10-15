@@ -11,34 +11,79 @@ interface ButtonProps {
    colorScheme: string;
 }
 
-const Button_S = styled.button<ButtonProps>`
-   height: min-content;
-
+const ButtonContainer = styled.button<ButtonProps>`
    ${tw`
-      border
-      flex-none
-      px-8 py-4
+      overflow-hidden
+      relative
       rounded-full 
-      whitespace-nowrap
+      w-max
    `}
 
-   ${({ colorScheme }) => {
-      switch (colorScheme) {
-         case 'default':
-            return tw`bg-transparent border-texts text-texts`;
-         case 'primary':
-            return tw`bg-texts border-texts text-titles`;
-         default:
-            return tw`bg-transparent border-titles text-titles`;
+   &:hover {
+      .topButton {
+         transform: rotateX(45deg);
       }
-   }}
+
+      .botButton {
+         transform: rotateX(0deg);
+      }
+   }
+
+   .button {
+      height: min-content;
+      transition: 0.3s;
+
+      ${tw`
+         border
+         flex-none
+         origin-bottom
+         px-8 py-4
+         rounded-full 
+         text-center
+         whitespace-nowrap
+      `}
+   }
+
+   .topButton {
+      ${({ colorScheme }) => {
+         switch (colorScheme) {
+            case 'default':
+               return tw`bg-transparent border-texts text-texts`;
+            case 'primary':
+               return tw`bg-texts border-texts text-titles`;
+            default:
+               return tw`bg-transparent border-titles text-titles`;
+         }
+      }}
+   }
+
+   .botButton {
+      transform: rotateX(-90deg);
+
+      ${tw`
+         absolute
+         top-0
+      `}
+
+      ${({ colorScheme }) => {
+         switch (colorScheme) {
+            case 'default':
+               return tw`bg-texts border-texts text-background`;
+            case 'primary':
+               return tw`bg-titles border-texts text-texts`;
+            default:
+               return tw`bg-background border-background text-texts`;
+         }
+      }}
+   }
 `;
 
 const CommonButton = ({ children, type, onClick }: Props) => {
    return (
-      <Button_S onClick={onClick} colorScheme={type}>
-         {children.toUpperCase()}
-      </Button_S>
+      <ButtonContainer className="commonButton" colorScheme={type} onClick={onClick}>
+         <div className="button topButton">{children.toUpperCase()}</div>
+         <div className="button botButton">{children.toUpperCase()}</div>
+      </ButtonContainer>
    );
 };
 

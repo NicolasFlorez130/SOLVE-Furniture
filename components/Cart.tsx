@@ -44,12 +44,12 @@ const Container = styled.div`
    .subtotal {
       ${tw`
          border-texts border-opacity-30 border-t
-         grid grid-cols-1
+         grid grid-cols-1 justify-between
          p-6
          w-full
       `}
 
-      div {
+      & > div {
          ${tw`
             grid grid-cols-2
          `}
@@ -67,6 +67,10 @@ const Container = styled.div`
                justify-self: end;
             }
          }
+      }
+
+      .commonButton {
+         justify-self: center;
       }
    }
 `;

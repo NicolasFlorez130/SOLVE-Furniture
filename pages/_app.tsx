@@ -9,9 +9,6 @@ import { alert } from '../utils/keys';
 
 function MyApp({ Component, pageProps }: AppProps) {
    useEffect(() => {
-      const reload = () => {
-         location.reload();
-      };
 
       const alertShown = localStorage.getItem(alert);
 
@@ -21,8 +18,6 @@ function MyApp({ Component, pageProps }: AppProps) {
          );
          localStorage.setItem(alert, 'shown');
       }
-
-      window.removeEventListener('resize', reload);
    }, []);
 
    return (

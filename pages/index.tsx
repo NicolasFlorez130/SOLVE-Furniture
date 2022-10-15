@@ -68,6 +68,12 @@ const Container = styled.div`
                text-9xl 
              )
          `}
+
+         ${tw`
+            lg:( 
+               text-[10rem]
+             )
+         `}
       }
 
       a {
@@ -83,19 +89,30 @@ const Index = ({ data }: Props) => {
       const bubbles: HTMLElement[] = gsap.utils.toArray('.bubble');
 
       bubbles.forEach(bubble => {
-         gsap.fromTo(
-            bubble,
-            {
-               x: () => `${mapRange(Math.random(), 0, 1, -20, 90)}vw`,
-               y: '100vh',
-            },
-            {
-               y: '-100%',
-               duration: () => mapRange(Math.random(), 0, 1, 10, 30),
-               ease: 'none',
-               repeat: -1,
-            }
-         );
+         let bubbleAnimation: any;
+
+         const setAnimation = () => {
+            bubbleAnimation = gsap.fromTo(
+               bubble,
+               {
+                  x: () => `${mapRange(Math.random(), 0, 1, -20, 90)}vw`,
+                  y: '100vh',
+               },
+               {
+                  y: '-100%',
+                  duration: () => mapRange(Math.random(), 0, 1, 10, 30),
+                  ease: 'none',
+                  repeat: -1,
+               }
+            );
+         };
+
+         setAnimation();
+
+         window.addEventListener('resize', () => {
+            bubbleAnimation.revert();
+            setAnimation();
+         });
       });
 
       // return () => {

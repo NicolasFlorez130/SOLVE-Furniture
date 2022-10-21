@@ -52,10 +52,6 @@ const ButtonContainer = styled.button`
    }
 `;
 
-const Button_S = tw.button`
-   
-`;
-
 const ButtonCircle = ({ children }: Props) => {
    return (
       <ButtonContainer>

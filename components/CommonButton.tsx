@@ -80,7 +80,7 @@ const ButtonContainer = styled.button<ButtonProps>`
 
 const CommonButton = ({ children, type, onClick }: Props) => {
    return (
-      <ButtonContainer className='commonButton' colorScheme={type} onClick={onClick}>
+      <ButtonContainer className="commonButton" colorScheme={type} onClick={onClick}>
          <div className="button topButton">{children.toUpperCase()}</div>
          <div className="button botButton">{children.toUpperCase()}</div>
       </ButtonContainer>

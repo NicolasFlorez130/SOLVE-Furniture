@@ -57,18 +57,19 @@ const Index = ({ categories, products }: Props) => {
                product.classList.add('hidden'));
       });
 
-      Flip.from(containerState, { duration: 0.2 });
+      Flip.from(containerState, { duration: 0.4 });
 
       Flip.from(productsState, {
-         duration: 0.2,
+         duration: 0.4,
          absolute: true,
+         ease: 'power4.out',
          onEnter: el =>
-            gsap.fromTo(el, { opacity: 0, scale: 0.5 }, { duration: 0.2, opacity: 1, scale: 1 }),
+            gsap.fromTo(el, { opacity: 0, scale: 0.5 }, { duration: 0.4, opacity: 1, scale: 1 }),
          onLeave: el =>
             gsap.fromTo(
                el,
                { width: `${productsState.elementStates.at(0)?.bounds.width}px` },
-               { duration: 0.2, opacity: 0, scale: 0.5 }
+               { duration: 0.4, opacity: 0, scale: 0.5 }
             ),
       });
    };

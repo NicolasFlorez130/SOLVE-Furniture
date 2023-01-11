@@ -167,10 +167,7 @@ const Name = ({ product, relatedProducts }: Props) => {
                      </Section>
                      <div ref={image} className="aspect-[2/3]" tw="relative w-full">
                         <Image
-                           src={
-                              process.env.NEXT_PUBLIC_API +
-                              product.attributes.image.data.attributes.url
-                           }
+                           src={product.attributes.image.data.attributes.url}
                            alt={product.attributes.name}
                            layout="fill"
                            objectFit="contain"

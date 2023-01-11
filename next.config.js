@@ -1,4 +1,7 @@
+const withTM = require('next-transpile-modules')(['gsap', 'smooth-scrollbar'])
+
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
    basePath: '/SOLVE-Furniture',
    productionBrowserSourceMaps: true,
@@ -12,6 +15,5 @@ const nextConfig = {
    assetPrefix: '/SOLVE-Furniture',
 }
 
-const withTM = require('next-transpile-modules')(['gsap', 'smooth-scrollbar'])
 
 module.exports = withTM(nextConfig)

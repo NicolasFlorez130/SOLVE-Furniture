@@ -86,10 +86,7 @@ const PreviewProduct = ({ orderedProduct }: Props) => {
       <Container>
          <div className="imageContainer">
             <Image
-               src={
-                  process.env.NEXT_PUBLIC_API +
-                  orderedProduct.product.attributes.image.data.attributes.url
-               }
+               src={orderedProduct.product.attributes.image.data.attributes.url}
                alt={orderedProduct.product.attributes.name + ' preview image'}
                layout="fill"
                objectFit="contain"

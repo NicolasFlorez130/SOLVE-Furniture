@@ -36,7 +36,7 @@ const Circle = styled.div<CircleProps>`
    }
 
    ${({ bgImage }) => {
-      return `background-image: url(${process.env.NEXT_PUBLIC_API + bgImage})`;
+      return `background-image: url(${bgImage})`;
    }}
 `;
 

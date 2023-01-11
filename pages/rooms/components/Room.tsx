@@ -27,7 +27,7 @@ const Container = styled.div<ContainerProps>`
    }
 
    ${({ bgUrl }) => {
-      return `background-image: url(${process.env.NEXT_PUBLIC_API + bgUrl})`;
+      return `background-image: url(${bgUrl})`;
    }}
 `;
 

@@ -53,7 +53,7 @@ const Store = ({ store }: Props) => {
             <div className="imageContainer">
                <Image
                   alt={store.attributes.city + ' store'}
-                  src={process.env.NEXT_PUBLIC_API + store.attributes.media.data.attributes.url}
+                  src={store.attributes.media.data.attributes.url}
                   layout="fill"
                   tw="object-cover"
                />

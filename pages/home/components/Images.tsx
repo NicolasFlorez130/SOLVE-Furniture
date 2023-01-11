@@ -66,7 +66,7 @@ const Images = ({ children, bgHref, bubbles }: Props) => {
                      <Image
                         loading="eager"
                         alt="bubble image"
-                        src={process.env.NEXT_PUBLIC_API + bubble.attributes.url}
+                        src={bubble.attributes.url}
                         layout="fill"
                         objectFit="cover"
                      />

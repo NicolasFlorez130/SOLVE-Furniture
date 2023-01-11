@@ -6,5 +6,6 @@
       "LOOKBOOK",
       "Powel",
       "SØLVE"
-   ]
+   ],
+   "dotenv.enableAutocloaking": false
 }

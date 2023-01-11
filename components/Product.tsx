@@ -35,7 +35,7 @@ const Product = ({ product }: Props) => {
                   <Image
                      alt={product.attributes.name}
                      src={
-                        process.env.NEXT_PUBLIC_API + product.attributes.image.data.attributes.url
+                        product.attributes.image.data.attributes.url
                      }
                      layout="fill"
                      tw="object-contain"

@@ -154,7 +154,7 @@ const Index = ({ data }: Props) => {
                         <Image
                            loading="eager"
                            alt={bubble.attributes.name + ' image'}
-                           src={process.env.NEXT_PUBLIC_API + bubble.attributes.url}
+                           src={bubble.attributes.url}
                            layout="fill"
                            objectFit="cover"
                         />

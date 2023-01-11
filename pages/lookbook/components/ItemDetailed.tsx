@@ -107,7 +107,7 @@ const ItemDetailed = ({ item, closeFunc }: Props) => {
                <h1>{name}</h1>
                <div className="imageContainer">
                   <Image
-                     src={process.env.NEXT_PUBLIC_API + item.attributes.image.data.attributes.url}
+                     src={item.attributes.image.data.attributes.url}
                      alt={name}
                      layout="fill"
                   />

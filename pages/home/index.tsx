@@ -195,10 +195,7 @@ const Home = ({ content, products, rooms, stores }: Props) => {
             <div id="homeWrapper" tw="h-screen">
                <Container>
                   <Layout inHome>
-                     <Hero
-                        bgHref={
-                           process.env.NEXT_PUBLIC_API + content.background.data.attributes.url
-                        }>
+                     <Hero bgHref={content.background.data.attributes.url}>
                         <h1>{content.title}</h1>
                         <Link href="/shop">
                            <a>
@@ -237,10 +234,7 @@ const Home = ({ content, products, rooms, stores }: Props) => {
                         </div>
                      </Section>
                      <Images
-                        bgHref={
-                           process.env.NEXT_PUBLIC_API +
-                           content.bubblesBackground.data.attributes.url
-                        }
+                        bgHref={content.bubblesBackground.data.attributes.url}
                         bubbles={content.bubble.data}>
                         {content.bubblesTitle}
                      </Images>

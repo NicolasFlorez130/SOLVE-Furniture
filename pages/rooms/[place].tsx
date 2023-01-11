@@ -61,7 +61,7 @@ const Place = ({ room, nextRoom }: Props) => {
                   <div tw="relative w-full" className="aspect-square">
                      <Image
                         src={
-                           process.env.NEXT_PUBLIC_API + room.attributes.image.data.attributes.url
+                           room.attributes.image.data.attributes.url
                         }
                         alt={room.attributes.place + ' room'}
                         layout="fill"
